@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/searchLinearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".SearchActivity">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        style="@style/SettingsActivity"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:navigationContentDescription="@string/search"
+        app:navigationIcon="@drawable/ic_back"
+        app:title="@string/search"
+        app:titleTextColor="@color/YP_black" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/searchInputLayout"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:endIconDrawable="@drawable/ic_close"
+        app:endIconMode="clear_text"
+        app:endIconTint="@color/YP_black"
+        app:hintEnabled="false">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/searchEditText"
+            style="@style/RoundedTextInputLayoutStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_rounded"
+            android:drawableStart="@drawable/search_icon"
+            android:drawablePadding="8dp"
+            android:hint="@string/search"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:maxLines="1"
+            android:paddingStart="12dp"
+            android:paddingEnd="296dp"
+            android:textColorHint="@color/YP_Text_Gray"
+            android:textSize="16sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+</LinearLayout>
+
+

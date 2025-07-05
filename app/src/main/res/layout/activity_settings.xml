@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/settings"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="25dp">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/container"
+        android:layout_width="336dp"
+        android:layout_height="56dp"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/darkThemeSwitch"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.50"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_back"
+        app:title="@string/settings_title"
+        app:titleTextAppearance="@style/MyToolbarTitleTextAppearance"
+        tools:ignore="MissingConstraints">
+    </com.google.android.material.appbar.MaterialToolbar>
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/darkThemeSwitch"
+        style="@style/SettingsItem"
+        android:layout_marginTop="24dp"
+        android:text="@string/dark_theme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/container"
+        app:thumbTint="@color/switch_thumb_tint_selector"
+        app:trackTint="@color/switch_track_selector" />
+
+    <TextView
+        android:id="@+id/share_app_TV"
+        style="@style/SettingsItem"
+        android:layout_marginTop="144dp"
+        android:text="@string/share_app"
+        app:drawableEndCompat="@drawable/ic_share"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/container" />
+
+    <TextView
+        android:id="@+id/contact_support_TV"
+        style="@style/SettingsItem"
+        android:layout_marginTop="208dp"
+        android:text="@string/contact_support"
+        app:drawableEndCompat="@drawable/ic_write_to_support"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/container" />
+
+    <TextView
+        android:id="@+id/user_agreement_TV"
+        style="@style/SettingsItem"
+        android:text="@string/user_agreement"
+        app:drawableEndCompat="@drawable/ic_user_agreement"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/contact_support_TV"
+        app:layout_constraintVertical_bias="0.0" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
