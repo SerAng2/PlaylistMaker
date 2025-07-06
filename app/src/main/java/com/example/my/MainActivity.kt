@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import com.example.my.MediaLibraryActivity
 import com.example.my.R
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
