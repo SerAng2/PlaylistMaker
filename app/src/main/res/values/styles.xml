@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="ActivityTV">
+    <style name="ActivityTV" parent="TextAppearance.Material3.TitleLarge">
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">22sp</item>
         <item name="titleTextColor">@color/black</item>
@@ -8,11 +8,11 @@
         <item name="android:fontFamily">@font/ys_display_regular</item>
     </style>
 
-    <style name="ActivityBTN">
+    <style name="ActivityBTN" parent="Widget.MaterialComponents.Button">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">0dp</item>
         <item name="android:layout_marginTop">16dp</item>
-        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:backgroundTint">@color/YP_white</item>
         <item name="android:textSize">22sp</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
@@ -25,14 +25,14 @@
         <item name="iconTint">@color/YP_black</item>
     </style>
 
-    <style name="SettingsItem">
-        <item name="android:layout_width">336dp</item>
-        <item name="android:layout_height">64dp</item>
+    <style name="settingsItem">
+        <item name="android:layout_width">330dp</item>
+        <item name="android:layout_height">60dp</item>
         <item name="android:textColor">@color/textColor</item>
         <item name="android:textSize">16sp</item>
-        <item name="background">@color/white</item>
-        <item name="android:fontFamily">@font/ys_display_medium</item>
-        <item name="android:textFontWeight">500</item>
+        <item name="background">@color/YP_white</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textFontWeight">400</item>
         <item name="android:paddingStart">16dp</item>
         <item name="android:paddingEnd">44dp</item>
         <item name="android:gravity">center_vertical</item>
@@ -53,9 +53,12 @@
         <item name="shapeAppearanceOverlay">@style/RoundedShapeAppearance</item>
     </style>
 
-    <style name="RoundedShapeAppearance" parent="">
+    <style name="RoundedShapeAppearance" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="android:textColorHint">@color/YP_Text_Gray</item>
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">8dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:inputType">text</item>
 
     </style>
 

@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         android:text="@string/main_headline"
-        android:textColor="@color/white"
+        android:textColor="@color/YP_white"
         app:layout_constraintBottom_toTopOf="@+id/search_BTN"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,22 +24,22 @@
         android:id="@+id/search_BTN"
         style="@style/ActivityBTN"
         android:layout_marginTop="@dimen/button_top_margin"
+        android:layout_marginBottom="16dp"
         android:text="@string/search"
         app:icon="@drawable/ic_search"
         app:layout_constraintBottom_toTopOf="@+id/media_library_BTN"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.25"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/media_library_BTN"
         style="@style/ActivityBTN"
+        android:layout_marginBottom="16dp"
         android:text="@string/media_library"
         app:icon="@drawable/ic_media_library"
         app:layout_constraintBottom_toTopOf="@+id/settings_BTN"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.25"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/search_BTN" />
 
@@ -51,7 +51,6 @@
         app:icon="@drawable/ic_settings"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.25"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/media_library_BTN" />
 </androidx.constraintlayout.widget.ConstraintLayout>

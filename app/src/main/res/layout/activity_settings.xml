@@ -9,6 +9,7 @@
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/container"
+        style="@style/MyToolbarTitleTextAppearance"
         android:layout_width="336dp"
         android:layout_height="56dp"
         android:layout_marginBottom="24dp"
@@ -20,12 +21,11 @@
         app:navigationIcon="@drawable/ic_back"
         app:title="@string/settings_title"
         app:titleTextAppearance="@style/MyToolbarTitleTextAppearance"
-        tools:ignore="MissingConstraints">
-    </com.google.android.material.appbar.MaterialToolbar>
+        tools:ignore="MissingConstraints" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/darkThemeSwitch"
-        style="@style/SettingsItem"
+        style="@style/settingsItem"
         android:layout_marginTop="24dp"
         android:text="@string/dark_theme"
         app:layout_constraintEnd_toEndOf="parent"
@@ -36,8 +36,8 @@
 
     <TextView
         android:id="@+id/share_app_TV"
-        style="@style/SettingsItem"
-        android:layout_marginTop="144dp"
+        style="@style/settingsItem"
+        android:layout_marginTop="140dp"
         android:text="@string/share_app"
         app:drawableEndCompat="@drawable/ic_share"
         app:layout_constraintEnd_toEndOf="parent"
@@ -46,8 +46,8 @@
 
     <TextView
         android:id="@+id/contact_support_TV"
-        style="@style/SettingsItem"
-        android:layout_marginTop="208dp"
+        style="@style/settingsItem"
+        android:layout_marginTop="200dp"
         android:text="@string/contact_support"
         app:drawableEndCompat="@drawable/ic_write_to_support"
         app:layout_constraintEnd_toEndOf="parent"
@@ -56,7 +56,7 @@
 
     <TextView
         android:id="@+id/user_agreement_TV"
-        style="@style/SettingsItem"
+        style="@style/settingsItem"
         android:text="@string/user_agreement"
         app:drawableEndCompat="@drawable/ic_user_agreement"
         app:layout_constraintBottom_toBottomOf="parent"

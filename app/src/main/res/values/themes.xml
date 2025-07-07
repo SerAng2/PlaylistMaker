@@ -8,7 +8,7 @@
     </style>
 
     <style name="SettingsActivity" parent="Base.Theme.PlaylistMaker">
-        <item name="android:background">@color/white</item>
+        <item name="android:background">@color/YP_white</item>
     </style>
 
     <style name="Theme.PlaylistMaker" parent="Base.Theme.PlaylistMaker">

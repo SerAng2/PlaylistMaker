@@ -1,4 +1,4 @@
-package com.example.playlistmaket
+package com.example.my
 
 import android.content.Context
 import android.os.Bundle
@@ -6,7 +6,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
-import com.example.my.R
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
