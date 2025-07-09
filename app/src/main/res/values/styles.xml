@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="ActivityTV" parent="TextAppearance.Material3.TitleLarge">
+    <style name="ActivityTV">
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">22sp</item>
         <item name="titleTextColor">@color/black</item>
@@ -26,15 +26,13 @@
     </style>
 
     <style name="settingsItem">
-        <item name="android:layout_width">330dp</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">60dp</item>
+        <item name="android:paddingStart">0dp</item>
         <item name="android:textColor">@color/textColor</item>
         <item name="android:textSize">16sp</item>
-        <item name="background">@color/YP_white</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textFontWeight">400</item>
-        <item name="android:paddingStart">16dp</item>
-        <item name="android:paddingEnd">44dp</item>
         <item name="android:gravity">center_vertical</item>
     </style>
 
