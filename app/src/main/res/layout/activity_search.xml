@@ -9,16 +9,12 @@
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
-        style="@style/SettingsActivity"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        style="@style/MyToolbarTitleTextAppearance"
         app:navigationIcon="@drawable/ic_back"
-        app:title="@string/search"
-        app:titleTextColor="@color/YP_black" />
+        app:title="@string/search" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/searchInputLayout"
-        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
@@ -29,9 +25,8 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/searchEditText"
-            style="@style/RoundedTextInputLayoutStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/settingsItem"
+            android:layout_height="52dp"
             android:background="@drawable/edittext_rounded"
             android:drawableStart="@drawable/search_icon"
             android:drawablePadding="8dp"
@@ -40,7 +35,7 @@
             android:maxLines="1"
             android:paddingStart="12dp"
             android:paddingEnd="296dp"
-             />
+            android:paddingTop="8.5dp"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 </LinearLayout>

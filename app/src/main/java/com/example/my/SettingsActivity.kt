@@ -34,21 +34,20 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun shareApp() {
-        val shareText = "Рекомендую курс по Android-разработке в Яндекс Практикуме: " +
-                "https://practicum.yandex.ru/android-developer/"
+        val shareText = getString(R.string.share_app_text)
 
         val shareIntent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
             putExtra(Intent.EXTRA_TEXT, shareText)
         }
 
-        startActivity(Intent.createChooser(shareIntent, "Поделиться через"))
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_app)))
     }
 
     private fun contactSupport() {
-        val email = "96-94@mail.ru"
-        val subject = "Сообщение разработчикам и разработчицам приложения Playlist Maker"
-        val body = "Спасибо разработчикам и разработчицам за крутое приложение!"
+        val email = getString(R.string.my_email)
+        val subject = getString(R.string.email_subject)
+        val body = getString(R.string.email_body)
 
         val intent = Intent(Intent.ACTION_SENDTO).apply {
             data = Uri.parse("mailto:$email")
@@ -59,12 +58,12 @@ class SettingsActivity : AppCompatActivity() {
         try {
             startActivity(intent)
         } catch (e: ActivityNotFoundException) {
-            Toast.makeText(this, "Почтовый клиент не найден", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.no_email_client), Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun openUserAgreement() {
-        val url = "https://yandex.ru/legal/practicum_offer/"
+        val url = getString(R.string.yandex_offer)
 
         val intent = Intent(Intent.ACTION_VIEW).apply {
             data = Uri.parse(url)
@@ -73,7 +72,7 @@ class SettingsActivity : AppCompatActivity() {
         try {
             startActivity(intent)
         } catch (e: ActivityNotFoundException) {
-            Toast.makeText(this, "Браузер не найден", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.no_browser), Toast.LENGTH_SHORT).show()
         }
     }
 }

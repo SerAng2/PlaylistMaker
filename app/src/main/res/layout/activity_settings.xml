@@ -11,8 +11,6 @@
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/container"
         style="@style/MyToolbarTitleTextAppearance"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
         app:navigationIcon="@drawable/ic_back"
         app:title="@string/settings_title" />
 
