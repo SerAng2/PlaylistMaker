@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+        <!-- Main layout -->
+        <dimen name="main_padding">16dp</dimen>
+        <dimen name="title_bottom_margin">24dp</dimen>
+
+        <!-- Button margins -->
+        <dimen name="button_top_margin">80dp</dimen>
+
+        <!-- Text sizes -->
+        <dimen name="main_title_size">35sp</dimen>
+
+</resources>
