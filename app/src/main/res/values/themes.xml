@@ -1,8 +1,6 @@
 <resources >
     <!-- Base application theme. -->
     <style name="Base.Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="android:screenOrientation">portrait</item>
-        <item name="colorOnPrimary">@color/YP_white</item>
 
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
@@ -11,9 +9,16 @@
     <style name="SettingsActivity" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@color/YP_white</item>
+
     </style>
 
     <style name="Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:screenOrientation">portrait</item>
+        <item name="mainTheme">@color/YP_blue</item>
+        <item name="white_black">@color/YP_white</item>
+        <item name="black_white">@color/YP_black</item>
+        <item name="white_gray">@color/YP_Text_Gray</item>
+        <item name="gray_black">@color/YP_Text_Gray</item>
+
     </style>
 </resources>
