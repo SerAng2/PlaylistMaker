@@ -10,35 +10,61 @@
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         style="@style/MyToolbarTitleTextAppearance"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:gravity="center_vertical"
         app:navigationIcon="@drawable/ic_back"
         app:title="@string/search" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/searchInputLayout"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:boxBackgroundMode="outline"
-        app:boxStrokeWidth="0dp"
-        app:endIconDrawable="@drawable/ic_close"
-        app:endIconMode="clear_text"
-        app:endIconTint="?attr/gray_black"
-        app:hintEnabled="false">
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="8dp">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <View
+            android:id="@+id/searchInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/edittext_rounded"/>
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginStart="12dp"
+            android:src="@drawable/ic_search"
+            app:tint="?attr/gray_black" />
+
+        <EditText
             android:id="@+id/searchEditText"
             style="@style/searchStyle"
-            android:background="@drawable/edittext_rounded"
-            android:drawableStart="@drawable/search_icon"
-            android:drawablePadding="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="48dp"
+            android:layout_marginEnd="48dp"
+            android:background="@android:color/transparent"
             android:hint="@string/search"
             android:imeOptions="actionSearch"
             android:inputType="text"
             android:maxLines="1"
-            android:paddingStart="12dp"
-            android:paddingTop="8.5dp" />
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:textColorHint="?attr/gray_black"
+            android:textColor="@color/black"/>
 
-    </com.google.android.material.textfield.TextInputLayout>
+        <ImageButton
+            android:id="@+id/clearButton"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="16dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_close"
+            app:tint="?attr/gray_black"
+            android:visibility="gone"/>
+
+    </FrameLayout>
 </LinearLayout>
 
 
