@@ -1,18 +1,16 @@
 <resources>
-    <!-- Base application theme. -->
-    <style name="Base.Theme.PlaylistMaker" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="background">@color/YP_black</item>
-        <item name="android:tint">@color/YP_white</item>
+    <style name="Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:screenOrientation">portrait</item>
+        <item name="mainTheme">@color/YP_black</item>
+        <item name="white_black">@color/YP_black</item>
+        <item name="black_white">@color/YP_white</item>
+        <item name="white_gray">@color/YP_white</item>
+        <item name="gray_black">@color/YP_black</item>
+
     </style>
 
     <style name="SettingsItem" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="background">@color/YP_black</item>
-        <item name="android:tint">@color/YP_white</item>
     </style>
-
 </resources>

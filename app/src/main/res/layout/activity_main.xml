@@ -5,11 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/main_padding"
-    android:background="@color/YP_blue">
+    android:background="?attr/mainTheme"
+    android:theme="@style/Theme.PlaylistMaker">
 
     <TextView
         android:id="@+id/textView"
         style="@style/ActivityTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         android:text="@string/main_headline"
         android:textColor="@color/YP_white"
@@ -21,6 +24,8 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/search_BTN"
         style="@style/ActivityBTN"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginTop="@dimen/button_top_margin"
         android:layout_marginBottom="16dp"
         android:text="@string/search"
@@ -33,6 +38,8 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/media_library_BTN"
         style="@style/ActivityBTN"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginBottom="16dp"
         android:text="@string/media_library"
         app:icon="@drawable/ic_media_library"
@@ -44,6 +51,8 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/settings_BTN"
         style="@style/ActivityBTN"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginBottom="28dp"
         android:text="@string/settings_title"
         app:icon="@drawable/ic_settings"
