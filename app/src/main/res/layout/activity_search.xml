@@ -11,7 +11,7 @@
         android:id="@+id/toolbar"
         style="@style/MyToolbarTitleTextAppearance"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="@dimen/layuot_56dp"
         android:gravity="center_vertical"
         app:navigationIcon="@drawable/ic_back"
         app:title="@string/search" />
@@ -19,20 +19,20 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginVertical="8dp">
+        android:layout_marginHorizontal="@dimen/layuot_16dp"
+        android:layout_marginVertical="@dimen/layuot_8dp">
 
         <View
             android:id="@+id/searchInputLayout"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="@dimen/layuot_48dp"
             android:background="@drawable/edittext_rounded"/>
 
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/layuot_24dp"
+            android:layout_height="@dimen/layuot_24dp"
             android:layout_gravity="start|center_vertical"
-            android:layout_marginStart="12dp"
+            android:layout_marginStart="@dimen/layuot_12dp"
             android:src="@drawable/ic_search"
             app:tint="?attr/gray_black" />
 
@@ -41,30 +41,34 @@
             style="@style/searchStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="48dp"
-            android:layout_marginEnd="48dp"
+            android:layout_marginStart="@dimen/layuot_48dp"
+            android:layout_marginEnd="@dimen/layuot_48dp"
             android:background="@android:color/transparent"
             android:hint="@string/search"
             android:imeOptions="actionSearch"
             android:inputType="text"
             android:maxLines="1"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
+            android:paddingStart="@dimen/layuot_8dp"
+            android:paddingEnd="@dimen/layuot_8dp"
             android:textColorHint="?attr/gray_black"
             android:textColor="@color/black"/>
 
         <ImageButton
             android:id="@+id/clearButton"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/layuot_24dp"
+            android:layout_height="@dimen/layuot_24dp"
             android:layout_gravity="end|center_vertical"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="@dimen/layuot_16dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_close"
             app:tint="?attr/gray_black"
             android:visibility="gone"/>
-
     </FrameLayout>
-</LinearLayout>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>
 

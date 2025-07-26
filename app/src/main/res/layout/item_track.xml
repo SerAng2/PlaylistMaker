@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/layuot_60dp">
+
+    <ImageView
+        android:id="@+id/artwork"
+        android:layout_width="@dimen/layuot_44dp"
+        android:layout_height="@dimen/layuot_44dp"
+        android:layout_marginStart="@dimen/layuot_12dp"
+        android:layout_marginVertical="@dimen/layuot_8dp"/>
+
+    <TextView
+        android:id="@+id/trackName"
+        style="@style/textStyle16"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layuot_20dp"
+        android:layout_marginStart="@dimen/layuot_66dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="@dimen/layuot_44dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layuot_16dp"
+        android:layout_marginStart="@dimen/layuot_66dp"
+        android:layout_marginEnd="@dimen/layuot_44dp"
+        android:layout_marginTop="34dp" >
+
+        <TextView
+            android:id="@+id/artistName"
+            style="@style/textStyle11"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="@dimen/layuot_16dp"
+            android:layout_height="@dimen/layuot_16dp"
+            android:src="@drawable/ic_point"
+            app:tint="?attr/gray_white"/>
+
+        <TextView
+            android:id="@+id/trackTime"
+            style="@style/textStyle11"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_user_agreement"
+        android:layout_gravity="end|center_vertical"
+        android:layout_marginEnd="@dimen/layuot_20dp"
+        app:tint="?attr/gray_white"/>
+
+</FrameLayout>

@@ -5,4 +5,5 @@
     <attr name="black_white" format="color" />
     <attr name="white_gray" format="color" />
     <attr name="gray_black" format="color" />
+    <attr name="gray_white" format="color" />
 </resources>

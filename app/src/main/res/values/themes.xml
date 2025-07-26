@@ -19,6 +19,8 @@
         <item name="black_white">@color/YP_black</item>
         <item name="white_gray">@color/YP_Text_Gray</item>
         <item name="gray_black">@color/YP_Text_Gray</item>
+        <item name="gray_white">@color/YP_Text_Gray</item>
+
 
     </style>
 </resources>
