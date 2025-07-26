@@ -1,5 +1,7 @@
 package com.example.my
 
+import android.content.Context
+import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -18,12 +20,22 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         artistName.text = track.artistName
         trackTime.text = track.trackTime
 
+        val cornerRadius = dpToPx(8f, itemView.context)
+
         Glide.with(itemView)
             .load(track.artworkUrl100)
             .placeholder(R.drawable.ic_launcher_background)
             .error(R.drawable.ic_launcher_foreground)
-            .transform(RoundedCorners(2))
+            .transform(RoundedCorners(cornerRadius))
             .centerCrop()
             .into(artwork)
+    }
+
+    private fun dpToPx(dp: Float, context: Context): Int {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            dp,
+            context.resources.displayMetrics
+        ).toInt()
     }
 }
