@@ -26,8 +26,8 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             .load(track.artworkUrl100)
             .placeholder(R.drawable.ic_launcher_background)
             .error(R.drawable.ic_launcher_foreground)
-            .transform(RoundedCorners(cornerRadius))
             .centerCrop()
+            .transform(RoundedCorners(cornerRadius))
             .into(artwork)
     }
 
