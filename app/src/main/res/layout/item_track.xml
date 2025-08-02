@@ -18,7 +18,9 @@
         android:layout_height="@dimen/layuot_20dp"
         android:layout_marginStart="@dimen/layuot_66dp"
         android:layout_marginTop="14dp"
-        android:layout_marginEnd="@dimen/layuot_44dp" />
+        android:layout_marginEnd="@dimen/layuot_44dp"
+        android:maxLines="1"
+        android:ellipsize="end" />
 
     <LinearLayout
         android:layout_width="match_parent"
