@@ -5,10 +5,11 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.my.databinding.ActivitySearchBinding
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -22,9 +23,7 @@ class SearchActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySearchBinding
     private lateinit var adapter: TrackAdapter
-
     private var lastSearchTerm: String? = null
-
     private var searchJob: Job? = null
 
     companion object {
@@ -58,7 +57,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun setupRetryButton() {
-        binding.searchEditText.setOnClickListener {
+        binding.retryButton.setOnClickListener {
             lastSearchTerm?.let {
                 performSearch(it)
             }
@@ -109,24 +108,25 @@ class SearchActivity : AppCompatActivity() {
 
         showLoading()
 
-        searchJob = CoroutineScope(Dispatchers.IO).launch {
+        searchJob = lifecycleScope.launch {
             try {
-                val response = RetrofitInstance.api.searchSongs(term)
-                withContext(Dispatchers.Main) {
-                    if (response.isSuccessful) {
-                        val body = response.body()
-                        val results = body?.results ?: emptyList()
-
-                        if (results.isEmpty()) {
-                            showPlaceholderNoResults()
-                        } else {
-                            val tracks = results.map { mapTrackResponseToTrack(it) }
-                            showTracks(tracks)
-                        }
-                    } else {
-                        showPlaceholderError()
-                    }
+                val response = withContext(Dispatchers.IO) {
+                    RetrofitInstance.api.searchSongs(term)
                 }
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    val results = body?.results ?: emptyList()
+
+                    if (results.isEmpty()) {
+                        showPlaceholderNoResults()
+                    } else {
+                        val tracks = results.map { mapTrackResponseToTrack(it) }
+                        showTracks(tracks)
+                    }
+                } else {
+                    showPlaceholderError()
+                }
+
             } catch (e: Exception) {
                 e.printStackTrace()
                 withContext(Dispatchers.Main) {
@@ -140,7 +140,7 @@ class SearchActivity : AppCompatActivity() {
         val trackName = trackResponse.trackName ?: "Unknown"
         val artistName = trackResponse.artistName ?: "Unknown"
         val trackTimeMillis = trackResponse.trackTimeMillis ?: 0L
-        val artworkUrl = trackResponse.artworkUrl100 // может быть null
+        val artworkUrl = trackResponse.artworkUrl100
 
         val formattedTime = SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis)
 
@@ -154,9 +154,9 @@ class SearchActivity : AppCompatActivity() {
 
     private fun showTracks(tracks: List<Track>) {
         binding.apply {
-            progressBar.visibility = View.GONE
-            recyclerView.visibility = View.VISIBLE
-            placeholderGroup.visibility = View.GONE
+            progressBar.isVisible = false
+            recyclerView.isVisible = true
+            placeholderGroup.isVisible = false
             adapter.updateTracks(tracks)
         }
     }
@@ -166,18 +166,18 @@ class SearchActivity : AppCompatActivity() {
             progressBar.visibility = View.GONE
             recyclerView.visibility = View.GONE
             placeholderGroup.visibility = View.VISIBLE
-            placeholderImage.setImageResource(R.drawable.ic_no_music) // ваша иконка "нет результатов"
+            placeholderImage.setImageResource(R.drawable.ic_no_music)
             placeholderText.text = getString(R.string.no_results_found)
             retryButton.visibility = View.GONE
         }
     }
 
     private fun showPlaceholderError() {
-        binding.apply {
+        with(binding) {
             progressBar.visibility = View.GONE
             recyclerView.visibility = View.GONE
             placeholderGroup.visibility = View.VISIBLE
-            placeholderImage.setImageResource(R.drawable.ic_no_connection) // ваша иконка ошибки
+            placeholderImage.setImageResource(R.drawable.ic_no_connection)
             placeholderText.text = getString(R.string.server_error_message)
             retryButton.visibility = View.VISIBLE
         }
