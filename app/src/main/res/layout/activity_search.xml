@@ -26,7 +26,7 @@
             android:id="@+id/searchInputLayout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/layuot_48dp"
-            android:background="@drawable/edittext_rounded"/>
+            android:background="@drawable/edittext_rounded" />
 
         <ImageView
             android:layout_width="@dimen/layuot_24dp"
@@ -45,14 +45,14 @@
             android:layout_marginEnd="@dimen/layuot_48dp"
             android:background="@android:color/transparent"
             android:hint="@string/search"
+            android:imeOptions="actionDone"
             android:inputType="text"
             android:maxLines="1"
             android:paddingStart="@dimen/layuot_8dp"
             android:paddingEnd="@dimen/layuot_8dp"
-            android:textColorHint="?attr/gray_black"
+            android:singleLine="true"
             android:textColor="@color/black"
-            android:imeOptions="actionDone"
-            android:singleLine="true"/>
+            android:textColorHint="?attr/gray_black" />
 
         <ImageButton
             android:id="@+id/clearButton"
@@ -62,33 +62,42 @@
             android:layout_marginEnd="@dimen/layuot_16dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_close"
-            app:tint="?attr/gray_black"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            app:tint="?attr/gray_black" />
     </FrameLayout>
 
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="@dimen/layuot_44dp"
         android:layout_height="@dimen/layuot_44dp"
-        android:visibility="gone"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/historyHeader"
+        style="@style/textStyle19"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/layuot_24dp"
+        android:text="@string/you_search"
+        android:textAlignment="center"
+        android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:visibility="gone"/>
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/placeholderGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="102dp"
-        android:orientation="vertical"
         android:gravity="center"
+        android:orientation="vertical"
         android:padding="@dimen/layuot_16dp"
-        android:visibility="gone" >
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/placeholderImage"
@@ -101,21 +110,27 @@
             style="@style/textStyle19"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/no_results_found"
             android:layout_marginTop="@dimen/layuot_16dp"
-            android:textAlignment="center"/>
+            android:text="@string/no_results_found"
+            android:textAlignment="center" />
 
         <Button
             android:id="@+id/retryButton"
             style="@style/textButtonStyle14"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/update"
-            android:textAllCaps="false"
             android:layout_marginTop="@dimen/layuot_24dp"
-            android:visibility="gone"
-            />
+            android:text="@string/update"
+            android:visibility="gone" />
     </LinearLayout>
 
+    <Button
+        android:id="@+id/clearHistoryButton"
+        style="@style/textButtonStyle14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/layuot_24dp"
+        android:text="@string/clear_history"
+        android:visibility="gone" />
 </LinearLayout>
-
