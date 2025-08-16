@@ -9,6 +9,7 @@ class SearchHistory(private val sharedPreferences: SharedPreferences) {
 
     private val gson = Gson()
     private val historyKey = "search_history"
+    private val MAX_HISTORY_SIZE = 10
 
     fun getHistory(): List<Track> {
         val json = sharedPreferences.getString(historyKey, null)
@@ -27,7 +28,7 @@ class SearchHistory(private val sharedPreferences: SharedPreferences) {
 
         history.add(0, track)
 
-        if (history.size > 10) {
+        if (history.size > MAX_HISTORY_SIZE) {
             history.removeAt(history.size - 1)
         }
 
