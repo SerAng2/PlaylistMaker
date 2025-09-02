@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
@@ -23,6 +24,7 @@ class SearchActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySearchBinding
     private lateinit var adapter: TrackAdapter
+    private lateinit var searchHistory: SearchHistory
     private var lastSearchTerm: String? = null
     private var searchJob: Job? = null
 
@@ -35,21 +37,27 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        adapter = TrackAdapter(emptyList())
+        adapter = TrackAdapter(emptyList()) { track ->
+            searchHistory.addTrack(track)
+
+            Toast.makeText(this, "Clicked: ${track.trackName}", Toast.LENGTH_SHORT).show()
+        }
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = adapter
 
-        val savedSearchText = savedInstanceState?.getString(SEARCH_TEXT_KEY) ?: ""
-        binding.searchEditText.setText(savedSearchText)
-        updateClearButtonVisibility(savedSearchText.isNotEmpty())
+        searchHistory = SearchHistory(getSharedPreferences("app_prefs", MODE_PRIVATE))
 
         setupSearchField()
         setupToolbar()
         setupRetryButton()
+        displaySearchHistory()
 
-        if (savedSearchText.isNotEmpty()) {
-            performSearch(savedSearchText)
-        }
+        val savedSearchText = savedInstanceState?.getString(SEARCH_TEXT_KEY) ?: ""
+        binding.searchEditText.setText(savedSearchText)
+        updateClearButtonVisibility(savedSearchText.isNotEmpty())
+    }
+    private fun updateClearButtonVisibility(isVisible: Boolean) {
+        binding.clearButton.isVisible = isVisible
     }
 
     private fun setupToolbar() {
@@ -71,6 +79,19 @@ class SearchActivity : AppCompatActivity() {
                 updateClearButtonVisibility(isTextNotEmpty)
                 if (!isTextNotEmpty) {
                     showPlaceholderNone()
+                    displaySearchHistory()
+                }
+                binding.clearHistoryButton.setOnClickListener {
+                    searchHistory.clearHistory()
+                    hideSearchHistory()
+                }
+            }
+
+            searchEditText.setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus && searchEditText.text.isEmpty()) {
+                    displaySearchHistory()
+                } else {
+                    hideSearchHistory()
                 }
             }
 
@@ -93,19 +114,32 @@ class SearchActivity : AppCompatActivity() {
                 searchEditText.text?.clear()
                 hideKeyboard()
                 showPlaceholderNone()
+                displaySearchHistory()
             }
         }
     }
 
-    private fun updateClearButtonVisibility(visible: Boolean) {
-        binding.clearButton.visibility = if (visible) View.VISIBLE else View.GONE
+    private fun displaySearchHistory() {
+        val history = searchHistory.getHistory()
+        if (history.isNotEmpty()) {
+            binding.historyHeader.visibility = View.VISIBLE
+            binding.recyclerView.isVisible = true
+            binding.clearHistoryButton.isVisible = true
+            adapter.updateTracks(history)
+        } else {
+            hideSearchHistory()
+        }
+    }
+
+    private fun hideSearchHistory() {
+        binding.historyHeader.visibility = View.GONE
+        binding.recyclerView.isVisible = false
+        binding.clearHistoryButton.isVisible = false
     }
 
     private fun performSearch(term: String) {
         lastSearchTerm = term
-
         searchJob?.cancel()
-
         showLoading()
 
         searchJob = lifecycleScope.launch {
@@ -126,7 +160,6 @@ class SearchActivity : AppCompatActivity() {
                 } else {
                     showPlaceholderError()
                 }
-
             } catch (e: Exception) {
                 e.printStackTrace()
                 withContext(Dispatchers.Main) {
@@ -141,14 +174,14 @@ class SearchActivity : AppCompatActivity() {
         val artistName = trackResponse.artistName ?: "Unknown"
         val trackTimeMillis = trackResponse.trackTimeMillis ?: 0L
         val artworkUrl = trackResponse.artworkUrl100
-
         val formattedTime = SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis)
 
         return Track(
             trackName = trackName,
             artistName = artistName,
             trackTime = formattedTime,
-            artworkUrl100 = artworkUrl
+            artworkUrl100 = artworkUrl,
+            trackId = trackResponse.trackId ?: 0
         )
     }
 
@@ -196,6 +229,9 @@ class SearchActivity : AppCompatActivity() {
             progressBar.visibility = View.VISIBLE
             recyclerView.visibility = View.GONE
             placeholderGroup.visibility = View.GONE
+
+            historyHeader.visibility = View.GONE
+            clearHistoryButton.visibility = View.GONE
         }
     }
 

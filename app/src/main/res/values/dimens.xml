@@ -7,6 +7,7 @@
         <dimen name="layuot_16dp">16dp</dimen>
         <dimen name="layuot_20dp">20dp</dimen>
         <dimen name="layuot_24dp">24dp</dimen>
+        <dimen name="layuot_36dp">36dp</dimen>
         <dimen name="layuot_44dp">44dp</dimen>
         <dimen name="layuot_48dp">48dp</dimen>
         <dimen name="layuot_56dp">56dp</dimen>

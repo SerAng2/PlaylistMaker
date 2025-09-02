@@ -9,7 +9,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.my.databinding.ItemTrackBinding
 
-class TrackAdapter(private var tracks: List<Track>) :
+class TrackAdapter(private var tracks: List<Track>, private val onTrackClick: (Track) -> Unit) :
     RecyclerView.Adapter<TrackAdapter.TrackViewHolder>() {
 
     fun updateTracks(newTracks: List<Track>) {
@@ -34,6 +34,10 @@ class TrackAdapter(private var tracks: List<Track>) :
             binding.trackName.text = track.trackName
             binding.artistName.text = track.artistName
             binding.trackTime.text = track.trackTime
+
+            binding.root.setOnClickListener {
+                onTrackClick(track)
+            }
 
             val cornerRadius = dpToPx(8f, binding.root.context)
 

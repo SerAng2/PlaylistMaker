@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:background="?attr/white_black"
     android:theme="@style/Theme.PlaylistMaker">
 
     <com.google.android.material.appbar.MaterialToolbar
@@ -26,7 +27,7 @@
 
 
         <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/darkThemeSwitch"
+            android:id="@+id/themeSwitcher"
             style="@style/settingsItem"
             android:layout_width="match_parent"
             android:layout_height="@dimen/layuot_60dp"
