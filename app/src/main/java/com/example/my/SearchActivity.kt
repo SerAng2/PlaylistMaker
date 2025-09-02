@@ -1,10 +1,12 @@
 package com.example.my
 
+import Track
+import TrackResponse
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
@@ -38,9 +40,15 @@ class SearchActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         adapter = TrackAdapter(emptyList()) { track ->
+            // Добавление трека в историю поиска
             searchHistory.addTrack(track)
 
-            Toast.makeText(this, "Clicked: ${track.trackName}", Toast.LENGTH_SHORT).show()
+            // Создание Intent для перехода на экран Player
+            val intent = Intent(this, PlayerActivity::class.java).apply {
+                putExtra("TRACK_DATA", track) // Передаем объект Track
+            }
+            // Запуск нового Activity
+            startActivity(intent)
         }
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = adapter
@@ -181,7 +189,7 @@ class SearchActivity : AppCompatActivity() {
             artistName = artistName,
             trackTime = formattedTime,
             artworkUrl100 = artworkUrl,
-            trackId = trackResponse.trackId ?: 0
+            trackId = trackResponse.trackId ?: 0,
         )
     }
 
@@ -229,7 +237,6 @@ class SearchActivity : AppCompatActivity() {
             progressBar.visibility = View.VISIBLE
             recyclerView.visibility = View.GONE
             placeholderGroup.visibility = View.GONE
-
             historyHeader.visibility = View.GONE
             clearHistoryButton.visibility = View.GONE
         }

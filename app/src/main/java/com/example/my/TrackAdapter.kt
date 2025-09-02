@@ -1,5 +1,7 @@
 package com.example.my
 
+import Track
+import kotlin.collections.List
 import android.content.Context
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -49,7 +51,6 @@ class TrackAdapter(private var tracks: List<Track>, private val onTrackClick: (T
                 .transform(RoundedCorners(cornerRadius))
                 .into(binding.artwork)
         }
-
         private fun dpToPx(dp: Float, context: Context): Int {
             return TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
