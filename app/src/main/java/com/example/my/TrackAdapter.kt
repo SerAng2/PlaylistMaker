@@ -1,5 +1,7 @@
 package com.example.my
 
+import Track
+import kotlin.collections.List
 import android.content.Context
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -28,7 +30,7 @@ class TrackAdapter(private var tracks: List<Track>, private val onTrackClick: (T
 
     override fun getItemCount(): Int = tracks.size
 
-    inner class TrackViewHolder(private val binding: ItemTrackBinding) :
+    open inner class TrackViewHolder(private val binding: ItemTrackBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(track: Track) {
             binding.trackName.text = track.trackName
@@ -39,7 +41,7 @@ class TrackAdapter(private var tracks: List<Track>, private val onTrackClick: (T
                 onTrackClick(track)
             }
 
-            val cornerRadius = dpToPx(8f, binding.root.context)
+            val cornerRadius = DisplayPx.dpToPx(8f, binding.root.context)
 
             Glide.with(itemView)
                 .load(track.artworkUrl100)
@@ -50,12 +52,13 @@ class TrackAdapter(private var tracks: List<Track>, private val onTrackClick: (T
                 .into(binding.artwork)
         }
 
-        private fun dpToPx(dp: Float, context: Context): Int {
-            return TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                dp,
-                context.resources.displayMetrics
-            ).toInt()
         }
     }
-}
+internal object DisplayPx{
+    fun dpToPx(dp: Float, context: Context): Int {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            dp,
+            context.resources.displayMetrics
+        ).toInt()
+    }}

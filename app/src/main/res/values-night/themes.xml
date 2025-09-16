@@ -7,6 +7,7 @@
         <item name="white_gray">@color/YP_white</item>
         <item name="gray_black">@color/YP_black</item>
         <item name="gray_white">@color/YP_white</item>
+        <item name="gray_red">@color/YP_Red</item>
 
     </style>
 

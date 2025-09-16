@@ -1,7 +1,9 @@
 package com.example.my
 
 
+import Track
 import android.content.SharedPreferences
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -22,6 +24,7 @@ class SearchHistory(private val sharedPreferences: SharedPreferences) {
     }
 
     fun addTrack(track: Track) {
+        Log.d("SEARCH_HISTORY", "Adding track: ${track.trackName}, releaseDate: ${track.releaseDate}")
         val history = getHistory().toMutableList()
 
         history.removeAll { it.trackId == track.trackId }

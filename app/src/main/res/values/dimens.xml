@@ -2,11 +2,16 @@
 <resources>
         <!-- Main layout -->
         <dimen name="layuot_0dp">0dp</dimen>
+        <dimen name="layuot_4dp">4dp</dimen>
         <dimen name="layuot_8dp">8dp</dimen>
         <dimen name="layuot_12dp">12dp</dimen>
         <dimen name="layuot_16dp">16dp</dimen>
         <dimen name="layuot_20dp">20dp</dimen>
         <dimen name="layuot_24dp">24dp</dimen>
+        <dimen name="layuot_26dp">26dp</dimen>
+        <dimen name="layuot_28dp">28dp</dimen>
+        <dimen name="layuot_30dp">30dp</dimen>
+        <dimen name="layuot_32dp">32dp</dimen>
         <dimen name="layuot_36dp">36dp</dimen>
         <dimen name="layuot_44dp">44dp</dimen>
         <dimen name="layuot_48dp">48dp</dimen>

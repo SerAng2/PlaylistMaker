@@ -1,10 +1,13 @@
 package com.example.my
 
+import Track
+import TrackResponse
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
@@ -30,6 +33,7 @@ class SearchActivity : AppCompatActivity() {
 
     companion object {
         private const val SEARCH_TEXT_KEY = "search_text_key"
+        const val TRACK_DATA = "track_data"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,9 +42,15 @@ class SearchActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         adapter = TrackAdapter(emptyList()) { track ->
+            // Добавление трека в историю поиска
             searchHistory.addTrack(track)
 
-            Toast.makeText(this, "Clicked: ${track.trackName}", Toast.LENGTH_SHORT).show()
+            // Создание Intent для перехода на экран Player
+            val intent = Intent(this, PlayerActivity::class.java).apply {
+                putExtra(TRACK_DATA, track) // Передаем объект Track
+            }
+            // Запуск нового Activity
+            startActivity(intent)
         }
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = adapter
@@ -150,7 +160,6 @@ class SearchActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     val body = response.body()
                     val results = body?.results ?: emptyList()
-
                     if (results.isEmpty()) {
                         showPlaceholderNoResults()
                     } else {
@@ -174,14 +183,30 @@ class SearchActivity : AppCompatActivity() {
         val artistName = trackResponse.artistName ?: "Unknown"
         val trackTimeMillis = trackResponse.trackTimeMillis ?: 0L
         val artworkUrl = trackResponse.artworkUrl100
-        val formattedTime = SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis)
+        val formattedTime = if (trackTimeMillis > 0) {
+            val minutes = (trackTimeMillis / 1000) / 60
+            val seconds = (trackTimeMillis / 1000) % 60
+            String.format("%02d:%02d", minutes, seconds)
+        } else {
+            ""
+        }
+        val genre = trackResponse.primaryGenreName ?: "Unknown"
+        val country = trackResponse.country ?: "Unknown"
+        val releaseDate = trackResponse.releaseDate ?: ""
+        val collectionName = trackResponse.collectionName ?: ""
+
 
         return Track(
+            trackId = trackResponse.trackId ?: 0,
             trackName = trackName,
             artistName = artistName,
             trackTime = formattedTime,
             artworkUrl100 = artworkUrl,
-            trackId = trackResponse.trackId ?: 0
+            collectionName = collectionName,
+            releaseDate = releaseDate,
+            primaryGenreName = genre,
+            genre = genre,
+            country = country,
         )
     }
 
@@ -229,7 +254,6 @@ class SearchActivity : AppCompatActivity() {
             progressBar.visibility = View.VISIBLE
             recyclerView.visibility = View.GONE
             placeholderGroup.visibility = View.GONE
-
             historyHeader.visibility = View.GONE
             clearHistoryButton.visibility = View.GONE
         }
