@@ -18,6 +18,7 @@
         <dimen name="layuot_56dp">56dp</dimen>
         <dimen name="layuot_60dp">60dp</dimen>
         <dimen name="layuot_66dp">66dp</dimen>
+        <dimen name="layuot_248dp">248dp</dimen>
 
         <!-- Button margins -->
         <dimen name="button_top_margin">80dp</dimen>
