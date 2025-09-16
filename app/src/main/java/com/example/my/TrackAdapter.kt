@@ -3,6 +3,7 @@ package com.example.my
 import Track
 import kotlin.collections.List
 import android.content.Context
+import android.graphics.Movie
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -61,4 +62,5 @@ internal object DisplayPx{
             dp,
             context.resources.displayMetrics
         ).toInt()
-    }}
+    }
+}

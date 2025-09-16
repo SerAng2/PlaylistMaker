@@ -69,12 +69,15 @@
         app:layout_constraintTop_toBottomOf="@+id/nameAlbum"
         app:layout_constraintBottom_toTopOf="@id/playButton"/>
 
-        <androidx.constraintlayout.utils.widget.ImageFilterView
+        <ImageView
         android:id="@+id/playButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/layuot_30dp"
         android:src="@drawable/ic_play"
+        android:contentDescription="Play/Pause"
+        app:tint="?attr/black_white"
+
         app:layout_constraintTop_toBottomOf="@+id/nameMusic"
         app:layout_constraintEnd_toStartOf="@id/favourites"
         app:layout_constraintStart_toEndOf="@id/add"
@@ -117,6 +120,7 @@
         style="@style/textStyle14"
         android:layout_width="@dimen/layuot_0dp"
         android:layout_height="wrap_content"
+        android:text="00:00"
         android:layout_marginTop="@dimen/layuot_4dp"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="@id/rightBorder16dp"

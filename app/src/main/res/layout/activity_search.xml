@@ -71,6 +71,8 @@
         android:id="@+id/progressBar"
         android:layout_width="@dimen/layuot_44dp"
         android:layout_height="@dimen/layuot_44dp"
+        android:layout_marginTop="@dimen/layuot_248dp"
+        android:indeterminateTint="@color/YP_blue"
         android:layout_gravity="center"
         android:visibility="gone" />
 
