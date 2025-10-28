@@ -1,4 +1,4 @@
-package com.example.my
+package com.example.my.presentation.ui
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -7,6 +7,10 @@ import android.view.View
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import com.example.my.presentation.ui.MediaLibraryActivity
+import com.example.my.R
+import com.example.my.presentation.ui.SearchActivity
+import com.example.my.presentation.ui.SettingsActivity
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
     @SuppressLint("MissingInflatedId")

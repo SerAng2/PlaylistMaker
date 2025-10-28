@@ -1,7 +1,5 @@
-package com.example.my
+package com.example.my.presentation.ui
 
-import Track
-import TrackResponse
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -11,47 +9,36 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.my.Creator
+import com.example.my.R
+import com.example.my.TrackAdapter
+import com.example.my.data.mapper.MapperTrackResponseToTrack.mapTrackResponseToTrack
 import com.example.my.databinding.ActivitySearchBinding
+import com.example.my.domain.models.Track
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import kotlin.jvm.java
 
 class SearchActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySearchBinding
     private lateinit var adapter: TrackAdapter
-    private lateinit var searchHistory: SearchHistory
-    private var lastSearchTerm: String? = null
-    private var searchJob: Job? = null
+
+    private lateinit var creator: Creator
+
 
     companion object {
         private const val SEARCH_TEXT_KEY = "search_text_key"
         const val TRACK_DATA = "track_data"
         private const val CLICK_DEBOUNCE_DELAY = 2000L
-
-    }
-
-    private val searchRunnable = Runnable {
-        val query = binding.searchEditText.text.toString().trim()
-        if (query.isNotEmpty()) {
-            performSearch(query)
-        } else {
-            showPlaceholderNone()
-            displaySearchHistory()
-        }
     }
 
     private var isClickAllowed = true
-
     private val handler = Handler(Looper.getMainLooper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,9 +46,12 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        showLoading()
+        creator = Creator(this)
+
         adapter = TrackAdapter(emptyList()) { track ->
             // Добавление трека в историю поиска
-            searchHistory.addTrack(track)
+            creator.getSearchHistoryUseCase.addTrack(track)
 
             // Создание Intent для перехода на экран Player
             if (clickDebounce()) {
@@ -70,16 +60,11 @@ class SearchActivity : AppCompatActivity() {
                 }
                 // Запуск нового Activity
                 startActivity(intent)
-
             }
         }
+
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = adapter
-
-        searchHistory = SearchHistory(
-            getSharedPreferences
-                ("app_prefs", MODE_PRIVATE)
-        )
 
         setupSearchField()
         setupToolbar()
@@ -89,6 +74,20 @@ class SearchActivity : AppCompatActivity() {
         val savedSearchText = savedInstanceState?.getString(SEARCH_TEXT_KEY) ?: ""
         binding.searchEditText.setText(savedSearchText)
         updateClearButtonVisibility(savedSearchText.isNotEmpty())
+    }
+
+    private fun onSearchTermChanged(term: String) {
+        creator.provideMoviesInteractor(term)
+    }
+
+    private val searchRunnable = Runnable {
+        val query = binding.searchEditText.text.toString().trim()
+        if (query.isNotEmpty()) {
+            onSearchTermChanged(query)
+        } else {
+            showPlaceholderNone()
+            displaySearchHistory()
+        }
     }
 
     private fun searchDebounce() {
@@ -104,17 +103,17 @@ class SearchActivity : AppCompatActivity() {
         binding.toolbar.setNavigationOnClickListener { finish() }
     }
 
-    private fun setupRetryButton() {
+    private fun setupRetryButton() { // кнопка повтора настройки
         binding.retryButton.setOnClickListener {
-            lastSearchTerm?.let {
-                performSearch(it)
+            lastSearchTerm?.let { term ->
+                onSearchTermChanged(term)
             }
         }
     }
 
     private fun setupSearchField() {
         with(binding) {
-            // Добавьте TextWatcher сюда, а не в другом месте
+
             searchEditText.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(
                     s: CharSequence?,
@@ -138,7 +137,7 @@ class SearchActivity : AppCompatActivity() {
             })
 
             binding.clearHistoryButton.setOnClickListener {
-                searchHistory.clearHistory()
+                creator.getSearchHistoryUseCase.clearHistory()
                 hideSearchHistory()
             }
 
@@ -154,7 +153,7 @@ class SearchActivity : AppCompatActivity() {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     val query = searchEditText.text.toString().trim()
                     if (query.isNotEmpty()) {
-                        performSearch(query)
+                        onSearchTermChanged(query)
                         hideKeyboard()
                     } else {
                         showPlaceholderNone()
@@ -175,7 +174,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun displaySearchHistory() {
-        val history = searchHistory.getHistory()
+        val history = creator.getSearchHistoryUseCase.getHistory()
         if (history.isNotEmpty()) {
             binding.historyHeader.visibility = View.VISIBLE
             binding.recyclerView.isVisible = true
@@ -192,67 +191,6 @@ class SearchActivity : AppCompatActivity() {
         binding.clearHistoryButton.isVisible = false
     }
 
-    private fun performSearch(term: String) { // выполнить поиск
-        lastSearchTerm = term
-        searchJob?.cancel()
-        showLoading()
-
-        searchJob = lifecycleScope.launch {
-            try {
-                val response = withContext(Dispatchers.IO) {
-                    RetrofitInstance.api.searchSongs(term)
-                }
-                if (response.isSuccessful) {
-                    val body = response.body()
-                    val results = body?.results ?: emptyList()
-                    if (results.isEmpty()) {
-                        showPlaceholderNoResults()
-                    } else {
-                        val tracks = results.map { mapTrackResponseToTrack(it) }
-                        showTracks(tracks)
-                    }
-                } else {
-                    showPlaceholderError()
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                withContext(Dispatchers.Main) {
-                    showPlaceholderError()
-                }
-            }
-        }
-    }
-
-    private fun mapTrackResponseToTrack(trackResponse: TrackResponse): Track {
-        val trackName = trackResponse.trackName ?: "Unknown"
-        val artistName = trackResponse.artistName ?: "Unknown"
-        val trackTimeMillis = trackResponse.trackTimeMillis ?: 0L
-        val artworkUrl = trackResponse.artworkUrl100
-        val formattedTime = if (trackTimeMillis > 0) {
-            TimeUtils.formatTime(trackTimeMillis.toInt())
-        } else {
-            ""
-        }
-        val genre = trackResponse.primaryGenreName ?: "Unknown"
-        val country = trackResponse.country ?: "Unknown"
-        val releaseDate = trackResponse.releaseDate ?: ""
-        val collectionName = trackResponse.collectionName ?: ""
-        val previewUrl = trackResponse.previewUrl
-
-        return Track(
-            trackId = trackResponse.trackId ?: 0,
-            trackName = trackName,
-            artistName = artistName,
-            trackTime = formattedTime,
-            artworkUrl100 = artworkUrl,
-            collectionName = collectionName,
-            releaseDate = releaseDate,
-            primaryGenreName = genre,
-            genre = genre,
-            country = country,
-            previewUrl = previewUrl
-        )
-    }
     private fun showTracks(tracks: List<Track>) {
         binding.apply {
             progressBar.isVisible = false
@@ -310,18 +248,6 @@ class SearchActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(SEARCH_TEXT_KEY, binding.searchEditText.text.toString())
-    }
-
-    object RetrofitInstance {
-        private const val BASE_URL = "https://itunes.apple.com"
-
-        val api: ITunesApi by lazy {
-            Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-                .create(ITunesApi::class.java)
-        }
     }
 
     private fun clickDebounce(): Boolean {

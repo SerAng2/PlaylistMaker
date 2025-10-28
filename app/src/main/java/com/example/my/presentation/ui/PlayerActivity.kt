@@ -1,8 +1,7 @@
-package com.example.my
+package com.example.my.presentation.ui
 
-import Track
-import android.media.MediaPlayer
 import android.content.Context
+import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -14,7 +13,10 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.example.my.SearchActivity.Companion.TRACK_DATA
+import com.example.my.DisplayPx
+import com.example.my.R
+import com.example.my.TimeUtils
+import com.example.my.domain.models.Track
 import com.google.android.material.appbar.MaterialToolbar
 
 class PlayerActivity : AppCompatActivity() {
@@ -63,7 +65,7 @@ class PlayerActivity : AppCompatActivity() {
             playbackControl()
         }
 
-        track = intent.getParcelableExtra(TRACK_DATA, Track::class.java)
+        track = intent.getParcelableExtra(SearchActivity.Companion.TRACK_DATA, Track::class.java)
         if (track != null) {
             displayTrackInfo(track!!)
             preparePlayer()
@@ -73,11 +75,12 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-        private fun playbackControl() {
+    private fun playbackControl() {
         when (playerState) {
             STATE_PLAYING -> {
                 pausePlayer()
             }
+
             STATE_PREPARED, STATE_PAUSED -> {
                 startPlayer()
             }
@@ -87,7 +90,7 @@ class PlayerActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         track?.let {
-            outState.putParcelable(TRACK_DATA, it)
+            outState.putParcelable(SearchActivity.Companion.TRACK_DATA, it)
         }
     }
 
@@ -115,7 +118,7 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun preparePlayer() {
-        val previewUrl = track?.previewUrl  // или как называется поле с URL в Track
+        val previewUrl = track?.previewUrl
         if (!previewUrl.isNullOrEmpty()) {
             mediaPlayer.setDataSource(previewUrl)
             mediaPlayer.prepareAsync()
@@ -130,6 +133,7 @@ class PlayerActivity : AppCompatActivity() {
             }
         }
     }
+
     private fun startPlayer() {
         mediaPlayer.start()
         play.setImageResource(R.drawable.ic_pause)

@@ -1,20 +1,20 @@
-package com.example.my
+package com.example.my.data.repository
 
-
-import Track
 import android.content.SharedPreferences
-import android.util.Log
+import com.example.my.domain.models.Track
+import com.example.my.domain.repository.SearchHistoryRepository
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-class SearchHistory(private val sharedPreferences: SharedPreferences) {
+class SearchHistoryRepositoryImpl(
+    private val sharedPreferences: SharedPreferences
+) : SearchHistoryRepository {
 
     private val gson = Gson()
-    private val historyKey = "search_history"
+    private val HISTORY_KEY = "search_history"
     private val MAX_HISTORY_SIZE = 10
-
-    fun getHistory(): List<Track> {
-        val json = sharedPreferences.getString(historyKey, null)
+    override fun getHistory(): List<Track> {
+        val json = sharedPreferences.getString(HISTORY_KEY, null)
         return if (json != null) {
             val type = object : TypeToken<List<Track>>() {}.type
             gson.fromJson(json, type) ?: emptyList()
@@ -23,27 +23,22 @@ class SearchHistory(private val sharedPreferences: SharedPreferences) {
         }
     }
 
-    fun addTrack(track: Track) {
-        Log.d("SEARCH_HISTORY", "Adding track: ${track.trackName}, releaseDate: ${track.releaseDate}")
+    override fun addTrack(track: Track) {
         val history = getHistory().toMutableList()
-
         history.removeAll { it.trackId == track.trackId }
-
         history.add(0, track)
-
         if (history.size > MAX_HISTORY_SIZE) {
             history.removeAt(history.size - 1)
         }
-
         saveHistory(history)
     }
 
-    fun clearHistory() {
-        sharedPreferences.edit().remove(historyKey).apply()
+    override fun clearHistory() {
+        sharedPreferences.edit().remove(HISTORY_KEY).apply()
     }
 
     private fun saveHistory(history: List<Track>) {
         val json = gson.toJson(history)
-        sharedPreferences.edit().putString(historyKey, json).apply()
+        sharedPreferences.edit().putString(HISTORY_KEY, json).apply()
     }
 }
