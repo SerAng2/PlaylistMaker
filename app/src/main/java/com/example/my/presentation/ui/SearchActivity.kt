@@ -28,7 +28,7 @@ class SearchActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySearchBinding
     private lateinit var adapter: TrackAdapter
-
+    private var lastSearchTerm: String? = null
     private lateinit var creator: Creator
 
 
@@ -76,14 +76,10 @@ class SearchActivity : AppCompatActivity() {
         updateClearButtonVisibility(savedSearchText.isNotEmpty())
     }
 
-    private fun onSearchTermChanged(term: String) {
-        creator.provideMoviesInteractor(term)
-    }
-
     private val searchRunnable = Runnable {
         val query = binding.searchEditText.text.toString().trim()
         if (query.isNotEmpty()) {
-            onSearchTermChanged(query)
+            creator.provideSearchTrackUseCase()
         } else {
             showPlaceholderNone()
             displaySearchHistory()
@@ -106,7 +102,7 @@ class SearchActivity : AppCompatActivity() {
     private fun setupRetryButton() { // кнопка повтора настройки
         binding.retryButton.setOnClickListener {
             lastSearchTerm?.let { term ->
-                onSearchTermChanged(term)
+                creator.provideSearchTrackUseCase()
             }
         }
     }
@@ -153,7 +149,7 @@ class SearchActivity : AppCompatActivity() {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     val query = searchEditText.text.toString().trim()
                     if (query.isNotEmpty()) {
-                        onSearchTermChanged(query)
+                        creator.provideSearchTrackUseCase()
                         hideKeyboard()
                     } else {
                         showPlaceholderNone()
