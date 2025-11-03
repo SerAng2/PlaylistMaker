@@ -7,41 +7,31 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.example.my.DisplayPx
 import com.example.my.R
-import com.example.my.TimeUtils
+import com.example.my.databinding.ActivityAudioPlayerBinding
 import com.example.my.domain.models.Track
-import com.google.android.material.appbar.MaterialToolbar
+import com.example.my.presentation.DisplayPx
+import com.example.my.presentation.utils.TimeUtils
 
 class PlayerActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityAudioPlayerBinding
     private var track: Track? = null
-
-    companion object {
-        private const val STATE_DEFAULT = 0
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
-        private const val DELAY_MILLIS = 1000L
-    }
-
     private var playerState = STATE_DEFAULT
-    private lateinit var play: ImageView
-    private lateinit var time: TextView
     private var mediaPlayer = MediaPlayer()
     private var isRunning = false
     private val handler = Handler(Looper.getMainLooper())
     private val updateTimerTask = object : Runnable {
         override fun run() {
             if (isRunning) {
-                val currentPosition: Int = mediaPlayer.currentPosition  // в миллисекундах
-                time.text = TimeUtils.formatTime(currentPosition)
+                val currentPosition: Int = mediaPlayer.currentPosition
+                binding.playingTime.text = TimeUtils.formatTime(
+                    currentPosition
+                )
             }
             handler.postDelayed(this, DELAY_MILLIS)
         }
@@ -50,27 +40,33 @@ class PlayerActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_audio_player)
+        binding = ActivityAudioPlayerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        play = findViewById(R.id.playButton)
-        time = findViewById(R.id.playingTime)
 
-        val toolbar = findViewById<MaterialToolbar>(R.id.backPlaylist)
+        val toolbar = binding.backPlaylist
         toolbar.setNavigationOnClickListener {
             pausePlayer()
             finish()
         }
 
-        play.setOnClickListener {
+        binding.playButton.setOnClickListener {
             playbackControl()
         }
 
-        track = intent.getParcelableExtra(SearchActivity.Companion.TRACK_DATA, Track::class.java)
+        track = intent.getParcelableExtra(
+            SearchActivity.Companion.TRACK_DATA,
+            Track::class.java
+        )
         if (track != null) {
             displayTrackInfo(track!!)
             preparePlayer()
         } else {
-            Log.e("PlayerActivity", "Track is null, finishing activity")
+            Log.e(
+                "PlayerActivity",
+                "Track is null, " +
+                        "finishing activity"
+            )
             finish()
         }
     }
@@ -97,23 +93,20 @@ class PlayerActivity : AppCompatActivity() {
     fun Context.cornerRadius() = DisplayPx.dpToPx(8f, this)
     private fun displayTrackInfo(track: Track) {
 
-        val coverImageView = findViewById<ImageView>(R.id.coverPlaylist)
+        val coverImageView = binding.coverPlaylist
         Glide.with(this)
             .load(track.getCoverArtwork())
             .transform(RoundedCorners(cornerRadius()))
             .placeholder(R.drawable.cover_cap)
             .into(coverImageView)
 
-        // Установка названия альбома/трека
-        findViewById<TextView>(R.id.nameAlbum).text = track.trackName
-        findViewById<TextView>(R.id.nameMusic).text = track.artistName
-        // Установка длительности
-        // Остальные поля (если есть данные)
-        findViewById<TextView>(R.id.durationTime).text = track.trackTime
-        findViewById<TextView>(R.id.albumName).text = track.trackName
-        findViewById<TextView>(R.id.genreMusic).text = track.primaryGenreName
-        findViewById<TextView>(R.id.countryMusic).text = track.country
-        findViewById<TextView>(R.id.yearMusic).text =
+        binding.nameAlbum.text = track.trackName
+        binding.nameMusic.text = track.artistName
+        binding.durationTime.text = track.trackTime
+        binding.albumName.text = track.trackName
+        binding.genreMusic.text = track.primaryGenreName
+        binding.countryMusic.text = track.country
+        binding.yearMusic.text =
             track.releaseDate?.substring(0, 4) ?: "Unknown"
     }
 
@@ -123,11 +116,11 @@ class PlayerActivity : AppCompatActivity() {
             mediaPlayer.setDataSource(previewUrl)
             mediaPlayer.prepareAsync()
             mediaPlayer.setOnPreparedListener {
-                play.isEnabled = true
+                binding.playButton.isEnabled = true
                 playerState = STATE_PREPARED
             }
             mediaPlayer.setOnCompletionListener {
-                play.setImageResource(R.drawable.ic_play)
+                binding.playButton.setImageResource(R.drawable.ic_play)
                 playerState = STATE_PREPARED
                 isRunning = false
             }
@@ -136,16 +129,15 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun startPlayer() {
         mediaPlayer.start()
-        play.setImageResource(R.drawable.ic_pause)
+        binding.playButton.setImageResource(R.drawable.ic_pause)
         playerState = STATE_PLAYING
         isRunning = true
         handler.post(updateTimerTask)
-
     }
 
     private fun pausePlayer() {
         mediaPlayer.pause()
-        play.setImageResource(R.drawable.ic_play)
+        binding.playButton.setImageResource(R.drawable.ic_play)
         playerState = STATE_PAUSED
         isRunning = false
         handler.removeCallbacks(updateTimerTask)
@@ -153,9 +145,17 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        play.setImageResource(R.drawable.ic_play)
+        binding.playButton.setImageResource(R.drawable.ic_play)
         if (mediaPlayer.isPlaying) {
             mediaPlayer.pause()
         }
+    }
+
+    companion object {
+        private const val STATE_DEFAULT = 0
+        private const val STATE_PREPARED = 1
+        private const val STATE_PLAYING = 2
+        private const val STATE_PAUSED = 3
+        private const val DELAY_MILLIS = 1000L
     }
 }

@@ -15,14 +15,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.my.Creator
 import com.example.my.R
-import com.example.my.TrackAdapter
-import com.example.my.data.mapper.MapperTrackResponseToTrack.mapTrackResponseToTrack
 import com.example.my.databinding.ActivitySearchBinding
 import com.example.my.domain.models.Track
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import com.example.my.presentation.TrackAdapter
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class SearchActivity : AppCompatActivity() {
 
@@ -30,14 +26,6 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var adapter: TrackAdapter
     private var lastSearchTerm: String? = null
     private lateinit var creator: Creator
-
-
-    companion object {
-        private const val SEARCH_TEXT_KEY = "search_text_key"
-        const val TRACK_DATA = "track_data"
-        private const val CLICK_DEBOUNCE_DELAY = 2000L
-    }
-
     private var isClickAllowed = true
     private val handler = Handler(Looper.getMainLooper())
 
@@ -47,6 +35,7 @@ class SearchActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         showLoading()
+
         creator = Creator(this)
 
         adapter = TrackAdapter(emptyList()) { track ->
@@ -79,10 +68,28 @@ class SearchActivity : AppCompatActivity() {
     private val searchRunnable = Runnable {
         val query = binding.searchEditText.text.toString().trim()
         if (query.isNotEmpty()) {
-            creator.provideSearchTrackUseCase()
+            performSearchCall(query)
         } else {
             showPlaceholderNone()
             displaySearchHistory()
+        }
+    }
+    private fun performSearchCall(query: String) {
+        lifecycleScope.launch {  // Запуск корутины
+            showLoading()  // Показ загрузки
+            try {
+                val tracks = creator.provideGetPerformSearchUseCase().performSearch(query)  // suspend-вызов Repo
+                if (tracks.isEmpty()) {
+                    showPlaceholderNoResults()
+                } else {
+                    showTracks(tracks)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                showPlaceholderError()
+            } finally {
+                hideLoading() // Скрыть загрузку
+            }
         }
     }
 
@@ -99,10 +106,10 @@ class SearchActivity : AppCompatActivity() {
         binding.toolbar.setNavigationOnClickListener { finish() }
     }
 
-    private fun setupRetryButton() { // кнопка повтора настройки
+    private fun setupRetryButton() { // кнопка обновить
         binding.retryButton.setOnClickListener {
-            lastSearchTerm?.let { term ->
-                creator.provideSearchTrackUseCase()
+            lastSearchTerm?.let {
+                performSearchCall(it)
             }
         }
     }
@@ -149,7 +156,7 @@ class SearchActivity : AppCompatActivity() {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     val query = searchEditText.text.toString().trim()
                     if (query.isNotEmpty()) {
-                        creator.provideSearchTrackUseCase()
+                        performSearchCall(query)
                         hideKeyboard()
                     } else {
                         showPlaceholderNone()
@@ -253,5 +260,16 @@ class SearchActivity : AppCompatActivity() {
             handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
         }
         return current
+    }
+    private fun hideLoading() {
+        binding.apply {
+            progressBar.visibility = View.GONE
+        }
+    }
+
+    companion object {
+        private const val SEARCH_TEXT_KEY = "search_text_key"
+        const val TRACK_DATA = "track_data"
+        private const val CLICK_DEBOUNCE_DELAY = 2000L
     }
 }

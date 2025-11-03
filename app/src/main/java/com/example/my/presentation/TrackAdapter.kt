@@ -1,4 +1,4 @@
-package com.example.my
+package com.example.my.presentation
 
 import android.content.Context
 import android.util.TypedValue
@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.my.R
 import com.example.my.databinding.ItemTrackBinding
 import com.example.my.domain.models.Track
 

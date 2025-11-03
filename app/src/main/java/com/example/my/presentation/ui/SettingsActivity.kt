@@ -16,7 +16,6 @@ class SettingsActivity : AppCompatActivity() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

@@ -1,4 +1,4 @@
-package com.example.my
+package com.example.my.presentation.utils
 
 object TimeUtils {
     fun formatTime(millis: Int): String {
