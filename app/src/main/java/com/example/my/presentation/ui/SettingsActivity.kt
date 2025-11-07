@@ -3,15 +3,14 @@ package com.example.my.presentation.ui
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.my.Creator
 import com.example.my.databinding.ActivitySettingsBinding
 import com.example.my.presentation.App
+import com.example.my.presentation.Creator.provideSupportUseCase
 
 class SettingsActivity : AppCompatActivity() {
 
-    private val creatorSupport by lazy { Creator(applicationContext) }
-
     private lateinit var binding: ActivitySettingsBinding
+
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,15 +33,15 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         binding.shareAppTV.setOnClickListener {
-            creatorSupport.provideSupportUseCase().shareApp(this@SettingsActivity)
+            provideSupportUseCase().shareApp()
         }
 
         binding.contactSupportTV.setOnClickListener {
-            creatorSupport.provideSupportUseCase().contactSupport(this@SettingsActivity)
+            provideSupportUseCase().contactSupport()
         }
 
         binding.userAgreementTV.setOnClickListener {
-            creatorSupport.provideSupportUseCase().openUserAgreement(this@SettingsActivity)
+            provideSupportUseCase().openUserAgreement()
         }
     }
 }

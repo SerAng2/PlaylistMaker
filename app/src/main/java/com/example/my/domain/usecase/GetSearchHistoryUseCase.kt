@@ -1,21 +1,21 @@
 package com.example.my.domain.usecase
 
 import com.example.my.domain.models.Track
-import com.example.my.domain.repository.SearchHistoryRepository
+import com.example.my.domain.interactor.SearchHistoryInteractor
 
 class GetSearchHistoryUseCase(
-    private val searchHistoryRepository: SearchHistoryRepository
+    private val searchHistoryInteractor: SearchHistoryInteractor
 ) {
 
     fun getHistory(): List<Track> {
-        return searchHistoryRepository.getHistory()
+        return searchHistoryInteractor.getHistory()
     }
 
     fun addTrack(track: Track) {
-        searchHistoryRepository.addTrack(track)
+        searchHistoryInteractor.addTrack(track)
     }
 
     fun clearHistory() {
-        searchHistoryRepository.clearHistory()
+        searchHistoryInteractor.clearHistory()
     }
 }

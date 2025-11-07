@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -13,10 +14,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.my.Creator
 import com.example.my.R
 import com.example.my.databinding.ActivitySearchBinding
 import com.example.my.domain.models.Track
+import com.example.my.presentation.Creator.getSearchHistoryUseCase
+import com.example.my.presentation.Creator.provideGetPerformSearchUseCase
 import com.example.my.presentation.TrackAdapter
 import kotlinx.coroutines.launch
 
@@ -25,7 +27,6 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
     private lateinit var adapter: TrackAdapter
     private var lastSearchTerm: String? = null
-    private lateinit var creator: Creator
     private var isClickAllowed = true
     private val handler = Handler(Looper.getMainLooper())
 
@@ -36,11 +37,9 @@ class SearchActivity : AppCompatActivity() {
 
         showLoading()
 
-        creator = Creator(this)
-
         adapter = TrackAdapter(emptyList()) { track ->
             // Добавление трека в историю поиска
-            creator.getSearchHistoryUseCase.addTrack(track)
+            getSearchHistoryUseCase.addTrack(track)
 
             // Создание Intent для перехода на экран Player
             if (clickDebounce()) {
@@ -78,7 +77,7 @@ class SearchActivity : AppCompatActivity() {
         lifecycleScope.launch {  // Запуск корутины
             showLoading()  // Показ загрузки
             try {
-                val tracks = creator.provideGetPerformSearchUseCase().performSearch(query)  // suspend-вызов Repo
+                val tracks = provideGetPerformSearchUseCase().performSearch(query)  // suspend-вызов Repo
                 if (tracks.isEmpty()) {
                     showPlaceholderNoResults()
                 } else {
@@ -140,7 +139,7 @@ class SearchActivity : AppCompatActivity() {
             })
 
             binding.clearHistoryButton.setOnClickListener {
-                creator.getSearchHistoryUseCase.clearHistory()
+                getSearchHistoryUseCase.clearHistory()
                 hideSearchHistory()
             }
 
@@ -177,7 +176,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun displaySearchHistory() {
-        val history = creator.getSearchHistoryUseCase.getHistory()
+        val history = getSearchHistoryUseCase.getHistory()
         if (history.isNotEmpty()) {
             binding.historyHeader.visibility = View.VISIBLE
             binding.recyclerView.isVisible = true
@@ -263,7 +262,7 @@ class SearchActivity : AppCompatActivity() {
     }
     private fun hideLoading() {
         binding.apply {
-            progressBar.visibility = View.GONE
+                progressBar.isVisible = false
         }
     }
 

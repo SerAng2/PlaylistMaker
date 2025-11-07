@@ -1,36 +1,41 @@
-package com.example.my
+package com.example.my.presentation
 
 import android.content.Context
 import android.content.SharedPreferences
 import com.example.my.data.repository.PerformSearchRepositoryImpl
-import com.example.my.data.repository.SearchHistoryRepositoryImpl
-import com.example.my.data.repository.SupportRepositoryImpl
+import com.example.my.domain.impl.SupportInteractorImpl
+import com.example.my.domain.impl.SearchHistoryInteractorImpl
 import com.example.my.domain.repository.PerformSearchRepository
-import com.example.my.domain.repository.SearchHistoryRepository
-import com.example.my.domain.repository.SupportRepository
+import com.example.my.domain.interactor.SearchHistoryInteractor
+import com.example.my.domain.interactor.SupportInteractor
 import com.example.my.domain.usecase.GetPerformSearchUseCase
 import com.example.my.domain.usecase.GetSearchHistoryUseCase
 import com.example.my.domain.usecase.GetSupportUseCase
 
-class Creator(private val context: Context) {
+object  Creator {
+    lateinit var appContext: Context
+
+    fun init(context: Context) {
+        appContext = context.applicationContext
+    }
     val sharedPreferences: SharedPreferences by lazy {
-        context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        appContext.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
     }
 
-    private val searchHistoryRepository: SearchHistoryRepository by lazy {
-        SearchHistoryRepositoryImpl(sharedPreferences)
+    private val searchHistoryInteractor: SearchHistoryInteractor by lazy {
+        SearchHistoryInteractorImpl(sharedPreferences)
     }
 
     val getSearchHistoryUseCase: GetSearchHistoryUseCase by lazy {
-        GetSearchHistoryUseCase(searchHistoryRepository)
+        GetSearchHistoryUseCase(searchHistoryInteractor)
     }
 
-    private fun provideSupportRepository() : SupportRepository {
-        return SupportRepositoryImpl()
+    private fun supportRepository() : SupportInteractor {
+        return SupportInteractorImpl(appContext)
     }
 
     fun provideSupportUseCase() : GetSupportUseCase {
-        return GetSupportUseCase(provideSupportRepository())
+        return GetSupportUseCase(supportRepository())
     }
 
    private fun performSearchRepository() : PerformSearchRepository {

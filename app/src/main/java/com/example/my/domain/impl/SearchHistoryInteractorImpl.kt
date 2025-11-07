@@ -1,14 +1,14 @@
-package com.example.my.data.repository
+package com.example.my.domain.impl
 
 import android.content.SharedPreferences
 import com.example.my.domain.models.Track
-import com.example.my.domain.repository.SearchHistoryRepository
+import com.example.my.domain.interactor.SearchHistoryInteractor
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-class SearchHistoryRepositoryImpl(
+class SearchHistoryInteractorImpl(
     private val sharedPreferences: SharedPreferences
-) : SearchHistoryRepository {
+) : SearchHistoryInteractor {
 
     private val gson = Gson()
     private val HISTORY_KEY = "search_history"

@@ -12,6 +12,8 @@ class App : Application() {
         val prefs = getSharedPreferences("settings", MODE_PRIVATE)
         darkTheme = prefs.getBoolean("darkTheme", false)
         switchTheme(darkTheme)
+
+        Creator.init(this)
     }
 
     fun switchTheme(darkThemeEnabled: Boolean) {

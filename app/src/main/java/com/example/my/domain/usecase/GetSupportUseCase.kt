@@ -1,21 +1,20 @@
 package com.example.my.domain.usecase
 
-import android.content.Context
-import com.example.my.domain.repository.SupportRepository
+import com.example.my.domain.interactor.SupportInteractor
 
 class GetSupportUseCase(
-    private val supportRepository: SupportRepository,
+    private val supportInteractor: SupportInteractor,
 ) {
 
-    fun shareApp(context: Context) {
-        supportRepository.shareApp(context)
+    fun shareApp() {
+        supportInteractor.shareApp()
     }
 
-    fun contactSupport(context: Context) {
-        supportRepository.contactSupport(context)
+    fun contactSupport() {
+        supportInteractor.contactSupport()
     }
 
-    fun openUserAgreement(context: Context) {
-        supportRepository.openUserAgreement(context)
+    fun openUserAgreement() {
+        supportInteractor.openUserAgreement()
     }
 }
