@@ -6,7 +6,6 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -17,8 +16,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.my.R
 import com.example.my.databinding.ActivitySearchBinding
 import com.example.my.domain.models.Track
-import com.example.my.presentation.Creator.getSearchHistoryUseCase
 import com.example.my.presentation.Creator.provideGetPerformSearchUseCase
+import com.example.my.presentation.Creator.provideSearchHistoryInteractor
+import com.example.my.presentation.Creator.provideSearchHistoryInteractorImpl
 import com.example.my.presentation.TrackAdapter
 import kotlinx.coroutines.launch
 
@@ -39,7 +39,7 @@ class SearchActivity : AppCompatActivity() {
 
         adapter = TrackAdapter(emptyList()) { track ->
             // Добавление трека в историю поиска
-            getSearchHistoryUseCase.addTrack(track)
+            provideSearchHistoryInteractorImpl().addTrack(track)
 
             // Создание Intent для перехода на экран Player
             if (clickDebounce()) {
@@ -139,7 +139,7 @@ class SearchActivity : AppCompatActivity() {
             })
 
             binding.clearHistoryButton.setOnClickListener {
-                getSearchHistoryUseCase.clearHistory()
+                provideSearchHistoryInteractor().clearHistory()
                 hideSearchHistory()
             }
 
@@ -176,7 +176,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun displaySearchHistory() {
-        val history = getSearchHistoryUseCase.getHistory()
+        val history =  provideSearchHistoryInteractor().getHistory()
         if (history.isNotEmpty()) {
             binding.historyHeader.visibility = View.VISIBLE
             binding.recyclerView.isVisible = true

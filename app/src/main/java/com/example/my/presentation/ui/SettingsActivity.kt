@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.my.databinding.ActivitySettingsBinding
 import com.example.my.presentation.App
-import com.example.my.presentation.Creator.provideSupportUseCase
+import com.example.my.presentation.Creator.provideSupportInteractor
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -33,15 +33,15 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         binding.shareAppTV.setOnClickListener {
-            provideSupportUseCase().shareApp()
+            provideSupportInteractor().shareApp()
         }
 
         binding.contactSupportTV.setOnClickListener {
-            provideSupportUseCase().contactSupport()
+            provideSupportInteractor().contactSupport()
         }
 
         binding.userAgreementTV.setOnClickListener {
-            provideSupportUseCase().openUserAgreement()
+            provideSupportInteractor().openUserAgreement()
         }
     }
 }
