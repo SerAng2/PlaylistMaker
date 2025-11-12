@@ -21,4 +21,8 @@ class SearchHistoryInteractorImpl(private val repository: HistoryRepository) : S
         }
         repository.saveHistory(history)
     }
+
+    override fun clearHistory() { // очистить историю repository
+        repository.clearHistory()
+    }
 }

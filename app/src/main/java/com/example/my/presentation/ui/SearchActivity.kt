@@ -18,7 +18,6 @@ import com.example.my.databinding.ActivitySearchBinding
 import com.example.my.domain.models.Track
 import com.example.my.presentation.Creator.provideGetPerformSearchUseCase
 import com.example.my.presentation.Creator.provideSearchHistoryInteractor
-import com.example.my.presentation.Creator.provideSearchHistoryInteractorImpl
 import com.example.my.presentation.TrackAdapter
 import kotlinx.coroutines.launch
 
@@ -39,7 +38,7 @@ class SearchActivity : AppCompatActivity() {
 
         adapter = TrackAdapter(emptyList()) { track ->
             // Добавление трека в историю поиска
-            provideSearchHistoryInteractorImpl().addTrack(track)
+            provideSearchHistoryInteractor().addTrack(track)
 
             // Создание Intent для перехода на экран Player
             if (clickDebounce()) {

@@ -46,11 +46,7 @@ object Creator {
         return repository ?: throw IllegalStateException("Call Creator.init() first")
     }
 
-    fun provideSearchHistoryInteractor(): HistoryRepository {
-        return historyRepository()
-    }
-
-    fun provideSearchHistoryInteractorImpl(): SearchHistoryInteractor {
+    fun provideSearchHistoryInteractor(): SearchHistoryInteractor {
         return SearchHistoryInteractorImpl(historyRepository())
     }
 
