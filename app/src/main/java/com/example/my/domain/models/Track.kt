@@ -1,3 +1,5 @@
+package com.example.my.domain.models
+
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
@@ -19,24 +21,3 @@ data class Track(
         return artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
     }
 }
-
-data class SearchResponse(
-    val resultCount: Int?,
-    val results: List<TrackResponse>?,
-)
-
-data class TrackResponse(
-    val trackName: String?,
-    val artistName: String?,
-    val releaseDate: String?,
-    val trackTimeMillis: Long?,
-    val collectionId: Int?,
-    val artworkUrl100: String,
-    val country: String?,
-    val trackId: Int?,
-    val primaryGenreName: String?,
-    val collectionName: String?,
-    val previewUrl: String
-)
-
-
