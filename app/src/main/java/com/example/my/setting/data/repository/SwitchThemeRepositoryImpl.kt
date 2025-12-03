@@ -1,14 +1,14 @@
 package com.example.my.setting.data.repository
 
 import android.content.SharedPreferences
-import com.example.my.setting.domain.repository.SwitchThemeRepository
 import com.example.my.setting.domain.model.SwitchTheme
+import com.example.my.setting.domain.repository.SwitchThemeRepository
 import com.google.gson.Gson
 
 class SwitchThemeRepositoryImpl(
     private val sharedPreferences: SharedPreferences?,
     private val gson: Gson?
-    ) : SwitchThemeRepository {
+) : SwitchThemeRepository {
 
     override fun saveSwitchTheme(settings: SwitchTheme) {
         val json = gson?.toJson(settings)

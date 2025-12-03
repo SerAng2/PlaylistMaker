@@ -51,7 +51,7 @@ class PlayerActivity : AppCompatActivity() {
          }
 
          viewModel. currentTrack.observe(this) {
-             binding.playingTime.text = it as CharSequence?
+             binding.playingTime.text = it as? CharSequence
          }
 
         binding.playButton.setOnClickListener {
@@ -60,7 +60,6 @@ class PlayerActivity : AppCompatActivity() {
 
         val toolbar = binding.backPlaylist
         toolbar.setNavigationOnClickListener {
-           // pausePlayer()
             finish()
         }
     }

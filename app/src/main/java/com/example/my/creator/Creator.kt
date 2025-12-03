@@ -7,13 +7,14 @@ import com.example.my.search.data.repository.PerformSearchRepositoryImpl
 import com.example.my.search.data.repository.SearchHistoryRepositoryImpl
 import com.example.my.setting.data.repository.SwitchThemeRepositoryImpl
 import com.example.my.search.domain.impl.SearchHistoryInteractorImpl
-import com.example.my.setting.domain.impl.SupportInteractorImpl
+import com.example.my.setting.data.impl.SupportInteractorImpl
 import com.example.my.search.domain.interactor.SearchHistoryInteractor
 import com.example.my.setting.domain.interactor.SupportInteractor
 import com.example.my.search.domain.repository.HistoryRepository
 import com.example.my.search.domain.repository.PerformSearchRepository
 import com.example.my.setting.domain.repository.SwitchThemeRepository
-import com.example.my.search.domain.use_case.GetPerformSearchUseCase
+import com.example.my.search.domain.use_case.impl.PerformSearchUseCaseImpl
+import com.example.my.setting.domain.use_case.impl.SwitchThemeUseCaseImpl
 import com.example.my.setting.domain.use_case.SwitchThemeUseCase
 import com.google.gson.Gson
 
@@ -39,7 +40,7 @@ object Creator {
     }
 
     fun provideSwitchThemeUseCase(): SwitchThemeUseCase {
-        return SwitchThemeUseCase(switchTheme())
+        return SwitchThemeUseCaseImpl(switchTheme())
     }
 
     private fun historyRepository(): HistoryRepository {
@@ -58,7 +59,7 @@ object Creator {
         return PerformSearchRepositoryImpl()
     }
 
-    fun provideGetPerformSearchUseCase(): GetPerformSearchUseCase {
-        return GetPerformSearchUseCase(performSearchRepository())
+    fun provideGetPerformSearchUseCase(): PerformSearchUseCaseImpl {
+        return PerformSearchUseCaseImpl(performSearchRepository())
     }
 }

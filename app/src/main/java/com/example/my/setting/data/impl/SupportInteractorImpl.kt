@@ -1,4 +1,4 @@
-package com.example.my.setting.domain.impl
+package com.example.my.setting.data.impl
 
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -35,6 +35,7 @@ class SupportInteractorImpl(private val context: Context) : SupportInteractor {
 
         val intent = Intent(Intent.ACTION_SENDTO).apply {
             data = Uri.parse("mailto:$email")
+            putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
             putExtra(Intent.EXTRA_SUBJECT, subject)
             putExtra(Intent.EXTRA_TEXT, body)
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -56,7 +57,7 @@ class SupportInteractorImpl(private val context: Context) : SupportInteractor {
         val url = context.getString(R.string.yandex_offer)
 
         val intent = Intent(Intent.ACTION_VIEW).apply {
-           data = Uri.parse(url)
+            data = Uri.parse(url)
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
 
@@ -69,7 +70,6 @@ class SupportInteractorImpl(private val context: Context) : SupportInteractor {
                 ),
                 Toast.LENGTH_SHORT
             ).show()
-
-            }
         }
     }
+}

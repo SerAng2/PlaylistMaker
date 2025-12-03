@@ -27,7 +27,7 @@ class PerformSearchRepositoryImpl : PerformSearchRepository {
             } else {
                 val error = Exception("API Error: ${response.message()}")
                 Log.e("Repo", "API Error", error)
-                throw error  // Или верните emptyList()
+                throw error
             }
         }
     }

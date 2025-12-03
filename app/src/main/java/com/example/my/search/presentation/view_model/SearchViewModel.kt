@@ -25,10 +25,6 @@ class SearchViewModel() : ViewModel() {
     private val stateLiveData = MutableLiveData<TracksState>(TracksState.PlaceholderNone)
     fun observeState(): LiveData<TracksState> = stateLiveData
 
-    init {
-        displaySearchHistory()
-    }
-
     private val searchRunnable = Runnable {
         val query = lastSearchTerm
         if (!query.isNullOrEmpty()) {

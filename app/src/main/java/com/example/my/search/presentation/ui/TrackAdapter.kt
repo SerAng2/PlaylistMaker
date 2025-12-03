@@ -34,7 +34,7 @@ class TrackAdapter(
 
     override fun getItemCount(): Int = tracks.size
 
-    open inner class TrackViewHolder(private val binding: ItemTrackBinding) :
+    open class TrackViewHolder(private val binding: ItemTrackBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(track: TrackViewState) {
             binding.apply {
@@ -47,8 +47,7 @@ class TrackAdapter(
 
             Glide.with(itemView)
                 .load(track.artworkUrl100)
-                .placeholder(R.drawable.ic_launcher_background)
-                .error(R.drawable.ic_launcher_foreground)
+                .placeholder(R.drawable.cover_cap)
                 .centerCrop()
                 .transform(RoundedCorners(cornerRadius))
                 .into(binding.artwork)
