@@ -3,7 +3,11 @@ package com.example.my.setting.ui
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.my.creator.Creator
+import com.example.my.setting.di.appModule
 import com.example.my.setting.domain.model.SwitchTheme
+import com.example.my.setting.ui.di.viewModelModule
+import org.koin.android.ext.koin.androidContext  // Новый импорт
+import org.koin.core.context.startKoin
 
 class App : Application() {
 
@@ -13,6 +17,11 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         Creator.init(this)
+
+        startKoin {
+            androidContext(this@App)
+            modules(appModule, viewModelModule)
+        }
 
         val currentSettings: SwitchTheme = switchThemeUseCase.getCurrentTheme()
         darkTheme = currentSettings.isDarkTheme

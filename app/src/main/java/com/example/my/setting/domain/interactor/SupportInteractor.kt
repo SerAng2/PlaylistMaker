@@ -1,7 +1,7 @@
 package com.example.my.setting.domain.interactor
 
 interface SupportInteractor {
-    fun shareApp()
-    fun contactSupport()
-    fun openUserAgreement()
+    fun getShareAppData(): Pair<String, String>
+    fun getContactSupportData(): Triple<String, String, String>
+    fun getUserAgreementUrl(): String
 }

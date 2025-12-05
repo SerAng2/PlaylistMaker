@@ -1,23 +1,26 @@
 package com.example.my.setting.ui
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.my.creator.Creator
+import com.example.my.setting.domain.interactor.SupportInteractor
+import com.example.my.setting.domain.interactor.SupportNavigator
 
-class SettingViewModel() : ViewModel() {
+class SettingViewModel(
+    private val interactor: SupportInteractor,
+    private val navigator: SupportNavigator
+) : ViewModel() {
 
-    fun shareApp() = Creator.provideSupportInteractor().shareApp()
+    fun onShareAppClicked() {
+        val (text, title) = interactor.getShareAppData()
+        navigator.shareApp(text, title)
+    }
 
-    fun contactSupport() = Creator.provideSupportInteractor().contactSupport()
-    fun openUserAgreement() = Creator.provideSupportInteractor().openUserAgreement()
+    fun onContactSupportClicked() {
+        val (email, subject, body) = interactor.getContactSupportData()
+        navigator.contactSupport(email, subject, body)
+    }
 
-    companion object {
-        fun getFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                SettingViewModel()
-            }
-        }
+    fun onOpenUserAgreementClicked() {
+        val url = interactor.getUserAgreementUrl()
+        navigator.openUserAgreement(url)
     }
 }

@@ -6,11 +6,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.my.databinding.ActivitySettingsBinding
 import com.example.my.setting.ui.App
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
-    private lateinit var viewModel: SettingViewModel
+    private val viewModel: SettingViewModel by viewModel()
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -26,9 +27,6 @@ class SettingsActivity : AppCompatActivity() {
         binding.themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
             (applicationContext as App).switchTheme(checked)
         }
-
-        viewModel = ViewModelProvider(this, SettingViewModel.getFactory())
-            .get(SettingViewModel::class.java)
     }
 
     private fun setupViews() {
@@ -37,15 +35,15 @@ class SettingsActivity : AppCompatActivity() {
         }
 
             binding.shareAppTV.setOnClickListener {
-                viewModel.shareApp()
+                viewModel.onShareAppClicked()
             }
 
             binding.contactSupportTV.setOnClickListener {
-                viewModel.contactSupport()
+                viewModel.onContactSupportClicked()
             }
 
             binding.userAgreementTV.setOnClickListener {
-                viewModel.openUserAgreement()
+                viewModel.onOpenUserAgreementClicked()
             }
         }
     }
