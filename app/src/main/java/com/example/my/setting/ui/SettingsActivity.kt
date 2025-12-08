@@ -3,9 +3,7 @@ package com.example.my.setting.ui
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.example.my.databinding.ActivitySettingsBinding
-import com.example.my.setting.ui.App
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {

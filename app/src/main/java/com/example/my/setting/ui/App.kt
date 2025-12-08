@@ -2,35 +2,46 @@ package com.example.my.setting.ui
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.my.creator.Creator
-import com.example.my.setting.di.appModule
+import com.example.my.search.di.historyRepositoryModule
+import com.example.my.search.di.performSearchModule
+import com.example.my.search.di.searchViewModelModule
+import com.example.my.setting.di.settingViewModelModule
+import com.example.my.setting.di.supportModule
+import com.example.my.setting.di.switchThemeModule
 import com.example.my.setting.domain.model.SwitchTheme
-import com.example.my.setting.ui.di.viewModelModule
-import org.koin.android.ext.koin.androidContext  // Новый импорт
+import com.example.my.setting.domain.use_case.SwitchThemeUseCase
+import org.koin.android.ext.android.inject
+import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
-class App : Application() {
+class App() : Application() {
 
-    private val switchThemeUseCase by lazy { Creator.provideSwitchThemeUseCase() }
     var darkTheme = false
+    private val switchTheme: SwitchThemeUseCase by inject()
 
     override fun onCreate() {
         super.onCreate()
-        Creator.init(this)
 
         startKoin {
             androidContext(this@App)
-            modules(appModule, viewModelModule)
+            modules(
+                supportModule,
+                settingViewModelModule,
+                historyRepositoryModule,
+                performSearchModule,
+                searchViewModelModule,
+                switchThemeModule
+            )
         }
 
-        val currentSettings: SwitchTheme = switchThemeUseCase.getCurrentTheme()
+        val currentSettings: SwitchTheme = switchTheme.getCurrentTheme()
         darkTheme = currentSettings.isDarkTheme
         switchTheme(darkTheme)
     }
 
     fun switchTheme(darkThemeEnabled: Boolean) {
         darkTheme = darkThemeEnabled
-        switchThemeUseCase.switchTheme(darkThemeEnabled)
+        switchTheme.switchTheme(darkThemeEnabled)
 
         AppCompatDelegate.setDefaultNightMode(
             if (darkThemeEnabled)

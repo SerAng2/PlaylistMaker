@@ -16,7 +16,6 @@ import java.util.concurrent.TimeUnit
 
 class PlayerViewModel() : ViewModel() {
 
-    private var track: Track? = null
     private val _currentTrack = MutableLiveData<String>()
     val currentTrack: LiveData<String> get() = _currentTrack
 
@@ -26,6 +25,7 @@ class PlayerViewModel() : ViewModel() {
     private val trackStateLiveData = MutableLiveData<TrackViewState?>()
     val observeTrack: LiveData<TrackViewState?> get() = trackStateLiveData
 
+    private var track: Track? = null
     private val mediaPlayer = MediaPlayer()
     private val handler = Handler(Looper.getMainLooper())
     private val updateIntervalMillis = 300L

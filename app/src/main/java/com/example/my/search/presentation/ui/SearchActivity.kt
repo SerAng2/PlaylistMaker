@@ -9,30 +9,25 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.my.R
 import com.example.my.databinding.ActivitySearchBinding
-import com.example.my.player.presentation.ui.PlayerActivity
 import com.example.my.player.presentation.state.TrackViewState
+import com.example.my.player.presentation.ui.PlayerActivity
 import com.example.my.search.presentation.state.TracksState
 import com.example.my.search.presentation.view_model.SearchViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySearchBinding
     private lateinit var adapter: TrackAdapter
-    private lateinit var viewModel: SearchViewModel
+    private val viewModel: SearchViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        viewModel = ViewModelProvider(
-            this,
-            SearchViewModel.getFactory()
-        ).get(SearchViewModel::class.java)
 
         showLoading()
 
