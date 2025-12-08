@@ -24,4 +24,6 @@
     <string name="year">Год</string>
     <string name="genre">Жанр</string>
     <string name="country">Страна</string>
+    <string name="play">PLAY</string>
+    <string name="pause">PAUSE</string>
 </resources>
