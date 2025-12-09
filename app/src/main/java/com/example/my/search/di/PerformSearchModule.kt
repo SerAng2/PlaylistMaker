@@ -7,6 +7,6 @@ import com.example.my.search.domain.use_case.impl.PerformSearchUseCaseImpl
 import org.koin.dsl.module
 
 val performSearchModule = module {
-    single<PerformSearchRepository> { PerformSearchRepositoryImpl() }
+    factory<PerformSearchRepository> { PerformSearchRepositoryImpl() }
     single<PerformSearchUseCase> { PerformSearchUseCaseImpl(get()) }
 }

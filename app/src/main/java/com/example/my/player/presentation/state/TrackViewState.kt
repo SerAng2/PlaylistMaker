@@ -16,4 +16,8 @@ data class TrackViewState(
     val genre: String?,
     val country: String?,
     val previewUrl: String
-) : Parcelable
+) : Parcelable {
+    fun getCoverArtwork(): String {
+        return artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
+    }
+}

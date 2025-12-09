@@ -1,7 +1,8 @@
-package com.example.my.setting.ui
+package com.example.my.common.presentation
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.my.player.di.playerModule
 import com.example.my.search.di.historyRepositoryModule
 import com.example.my.search.di.performSearchModule
 import com.example.my.search.di.searchViewModelModule
@@ -14,7 +15,7 @@ import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
-class App() : Application() {
+class AppTheme() : Application() {
 
     var darkTheme = false
     private val switchTheme: SwitchThemeUseCase by inject()
@@ -23,14 +24,15 @@ class App() : Application() {
         super.onCreate()
 
         startKoin {
-            androidContext(this@App)
+            androidContext(this@AppTheme)
             modules(
                 supportModule,
                 settingViewModelModule,
                 historyRepositoryModule,
                 performSearchModule,
                 searchViewModelModule,
-                switchThemeModule
+                switchThemeModule,
+                playerModule
             )
         }
 

@@ -9,7 +9,6 @@ import com.google.gson.reflect.TypeToken
 class SearchHistoryRepositoryImpl(
     private val sharedPreferences: SharedPreferences?,
     private val gson: Gson?,
-    private val HISTORY_KEY: String = "search_history"
 ) : HistoryRepository {
 
     override fun getHistory(): List<Track> { // получить историю repository
@@ -30,4 +29,9 @@ class SearchHistoryRepositoryImpl(
         val json = gson?.toJson(history)
         sharedPreferences?.edit()?.putString(HISTORY_KEY, json)?.apply()
     }
+
+    companion object {
+        private const val HISTORY_KEY = "search_history"
+    }
+
 }

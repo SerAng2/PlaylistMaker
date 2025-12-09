@@ -4,7 +4,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name="com.example.my.setting.ui.App"
+        android:name="com.example.my.common.presentation.AppTheme"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:enableOnBackInvokedCallback="true"
@@ -27,7 +27,7 @@
             android:exported="false" />
 
         <activity
-            android:name="com.example.my.setting.ui.SettingsActivity"
+            android:name="com.example.my.setting.presentation.ui.SettingsActivity"
             android:exported="false" />
 
         <activity

@@ -12,6 +12,6 @@ import org.koin.dsl.module
 val historyRepositoryModule = module {
     single { androidContext().getSharedPreferences("my_prefs", Context.MODE_PRIVATE) }
     single { Gson() }
-    single<HistoryRepository> { SearchHistoryRepositoryImpl(get(), get()) }
-    single<SearchHistoryInteractor> { SearchHistoryInteractorImpl(get()) }
+    factory<HistoryRepository> { SearchHistoryRepositoryImpl(get(), get()) }
+    factory<SearchHistoryInteractor> { SearchHistoryInteractorImpl(get()) }
 }
