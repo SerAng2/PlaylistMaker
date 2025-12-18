@@ -101,7 +101,7 @@
         <item name="android:textFontWeight">400</item>
     </style>
 
-    <style name="MyToolbarTitleTextAppearance" parent="TextAppearance.MaterialComponents.Headline6">
+    <style name="MyToolbarTitleTextAppearance">
         <item name="android:textSize">22sp</item>
         <item name="android:titleTextColor">?attr/black_white</item>
         <item name="navigationIconTint">?attr/black_white</item>
