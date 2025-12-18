@@ -8,15 +8,13 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.example.my.common.domain.model.Track
 import com.example.my.player.presentation.state.TrackViewState
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
-class PlayerViewModel() : ViewModel() {
+class PlayerViewModel(private val mediaPlayer: MediaPlayer) : ViewModel() {
 
-    private var track: Track? = null
     private val _currentTrack = MutableLiveData<String>()
     val currentTrack: LiveData<String> get() = _currentTrack
 
@@ -26,7 +24,7 @@ class PlayerViewModel() : ViewModel() {
     private val trackStateLiveData = MutableLiveData<TrackViewState?>()
     val observeTrack: LiveData<TrackViewState?> get() = trackStateLiveData
 
-    private val mediaPlayer = MediaPlayer()
+    private var track: Track? = null
     private val handler = Handler(Looper.getMainLooper())
     private val updateIntervalMillis = 300L
 
@@ -141,17 +139,5 @@ class PlayerViewModel() : ViewModel() {
         const val STATE_PREPARED = 1
         const val STATE_PLAYING = 2
         const val STATE_PAUSED = 3
-
-        fun getFactory(): ViewModelProvider.Factory {
-            return object : ViewModelProvider.Factory {
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    if (modelClass.isAssignableFrom(PlayerViewModel::class.java)) {
-                        @Suppress("UNCHECKED_CAST")
-                        return PlayerViewModel() as T
-                    }
-                    throw IllegalArgumentException("Unknown ViewModel class")
-                }
-            }
-        }
     }
 }

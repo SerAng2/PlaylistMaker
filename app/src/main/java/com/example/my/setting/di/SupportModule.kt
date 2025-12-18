@@ -9,7 +9,7 @@ import com.example.my.setting.domain.interactor.SupportStringsRepository
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
-val appModule = module {
+val supportModule = module {
 
     single<SupportStringsRepository> { SupportStringsRepositoryImpl(androidContext()) }
 

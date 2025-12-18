@@ -1,10 +1,10 @@
-package com.example.my.setting.ui.di
+package com.example.my.setting.di
 
-import com.example.my.setting.ui.SettingViewModel
+import com.example.my.setting.presentation.view_model.SettingViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-val viewModelModule = module {
+val settingViewModelModule = module {
     viewModel {
         SettingViewModel(
             get(), get()

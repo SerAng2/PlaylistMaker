@@ -5,19 +5,20 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.my.R
 import com.example.my.common.domain.model.Track
-import com.example.my.creator.Creator
 import com.example.my.player.presentation.state.TrackViewState
+import com.example.my.search.domain.interactor.SearchHistoryInteractor
+import com.example.my.search.domain.use_case.PerformSearchUseCase
 import com.example.my.search.presentation.state.TracksState
 import kotlinx.coroutines.launch
 
-class SearchViewModel() : ViewModel() {
+class SearchViewModel(
+    private val performSearch: PerformSearchUseCase,
+    private val historyInteractor: SearchHistoryInteractor,
+) : ViewModel() {
 
-    private val searchTrackUseCase = Creator.provideGetPerformSearchUseCase()
-    private val searchHistoryInteractor = Creator.provideSearchHistoryInteractor()
     private var isClickAllowed = true
     private var lastSearchTerm: String? = null
     private var handler = Handler(Looper.getMainLooper())
@@ -41,6 +42,7 @@ class SearchViewModel() : ViewModel() {
             displaySearchHistory()
         }
     }
+
     fun performSearch(query: String) {
         if (query.isNotEmpty()) {
             searchTracks(query)
@@ -54,7 +56,7 @@ class SearchViewModel() : ViewModel() {
         stateLiveData.postValue(TracksState.Loading)
         viewModelScope.launch {
             try {
-                val tracks = searchTrackUseCase.performSearch(query)
+                val tracks = performSearch.performSearch(query)
                 if (tracks.isEmpty()) {
                     stateLiveData.postValue(
                         TracksState.Empty(
@@ -63,7 +65,7 @@ class SearchViewModel() : ViewModel() {
                         )
                     )
                 } else {
-                    val uiModels = tracks.map { it.toTrackViewState() } // Новый метод
+                    val uiModels = tracks.map { it.toTrackViewState() }
                     stateLiveData.postValue(TracksState.Content(uiModels))
                 }
             } catch (e: Exception) {
@@ -78,17 +80,18 @@ class SearchViewModel() : ViewModel() {
     }
 
     fun displaySearchHistory() {
-        val history = searchHistoryInteractor.getHistory() // List<Track>
+        val history = historyInteractor.getHistory()
         if (history.isNotEmpty()) {
-            val uiModels = history.map { it.toTrackViewState() } // Преобразование в List<TrackViewState>
-            stateLiveData.postValue(TracksState.History( uiModels)) // Теперь типы совпадают — ошибка уйдет
+            val uiModels =
+                history.map { it.toTrackViewState() } // Преобразование в List<TrackViewState>
+            stateLiveData.postValue(TracksState.History(uiModels)) // Теперь типы совпадают — ошибка уйдет
         } else {
             stateLiveData.postValue(TracksState.PlaceholderNone)
         }
     }
 
     fun clearHistory() {
-        searchHistoryInteractor.clearHistory()
+        historyInteractor.clearHistory()
         stateLiveData.postValue(TracksState.PlaceholderNone)
     }
 
@@ -103,7 +106,7 @@ class SearchViewModel() : ViewModel() {
 
     fun add(track: TrackViewState) {
         val domainTrack = track.toDomainTrack()
-        searchHistoryInteractor.addTrack(domainTrack)
+        historyInteractor.addTrack(domainTrack)
     }
 
     override fun onCleared() {
@@ -145,16 +148,5 @@ class SearchViewModel() : ViewModel() {
 
     companion object {
         private const val CLICK_DEBOUNCE_DELAY = 2000L
-        fun getFactory(): ViewModelProvider.Factory {
-            return object : ViewModelProvider.Factory {
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    if (modelClass.isAssignableFrom(SearchViewModel::class.java)) {
-                        @Suppress("UNCHECKED_CAST")
-                        return SearchViewModel() as T
-                    }
-                    throw IllegalArgumentException("Unknown ViewModel class")
-                }
-            }
-        }
     }
 }

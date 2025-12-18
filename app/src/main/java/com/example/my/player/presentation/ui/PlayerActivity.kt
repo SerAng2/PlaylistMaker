@@ -5,7 +5,6 @@ import android.os.Build
 import android.os.Bundle
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.my.R
@@ -14,11 +13,12 @@ import com.example.my.player.presentation.state.TrackViewState
 import com.example.my.player.presentation.utils.DisplayPx
 import com.example.my.player.presentation.view_model.PlayerViewModel
 import com.example.my.search.presentation.ui.SearchActivity
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlayerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAudioPlayerBinding
-    private lateinit var viewModel: PlayerViewModel
+    private val viewModel: PlayerViewModel by viewModel()
 
    private var track: TrackViewState? = null
 
@@ -27,11 +27,6 @@ class PlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAudioPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        viewModel = ViewModelProvider(
-            this,
-            PlayerViewModel.getFactory()
-        ).get(PlayerViewModel::class.java)
 
         setupTrackInfoObserver()
 
@@ -80,7 +75,7 @@ class PlayerActivity : AppCompatActivity() {
 
         val coverImageView = binding.coverPlaylist
         Glide.with(this)
-            .load(track.artworkUrl100 ?: "")
+            .load(track.getCoverArtwork())
             .transform(RoundedCorners(cornerRadius()))
             .placeholder(R.drawable.cover_cap)
             .into(coverImageView)

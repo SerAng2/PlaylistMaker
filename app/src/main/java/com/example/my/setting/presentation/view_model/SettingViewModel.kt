@@ -1,4 +1,4 @@
-package com.example.my.setting.ui
+package com.example.my.setting.presentation.view_model
 
 import androidx.lifecycle.ViewModel
 import com.example.my.setting.domain.interactor.SupportInteractor

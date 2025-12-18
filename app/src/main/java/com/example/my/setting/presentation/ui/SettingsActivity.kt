@@ -1,11 +1,11 @@
-package com.example.my.setting.ui
+package com.example.my.setting.presentation.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
+import com.example.my.common.presentation.AppTheme
 import com.example.my.databinding.ActivitySettingsBinding
-import com.example.my.setting.ui.App
+import com.example.my.setting.presentation.view_model.SettingViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
@@ -22,10 +22,10 @@ class SettingsActivity : AppCompatActivity() {
 
         setupViews()
 
-        binding.themeSwitcher.isChecked = (applicationContext as App).darkTheme
+        binding.themeSwitcher.isChecked = (applicationContext as AppTheme).darkTheme
 
         binding.themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
-            (applicationContext as App).switchTheme(checked)
+            (applicationContext as AppTheme).switchTheme(checked)
         }
     }
 

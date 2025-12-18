@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.my.databinding.ActivityMainBinding
 import com.example.my.mediaLibrary.ui.MediaLibraryActivity
 import com.example.my.search.presentation.ui.SearchActivity
-import com.example.my.setting.ui.SettingsActivity
+import com.example.my.setting.presentation.ui.SettingsActivity
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
