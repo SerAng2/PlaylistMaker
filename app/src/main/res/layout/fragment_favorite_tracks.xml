@@ -14,15 +14,15 @@
         android:layout_gravity="center"
         android:layout_marginTop="106dp"
         android:src="@drawable/ic_no_music"
-        tools:ignore="ContentDescription" />
+        tools:ignore="ContentDescription"/>
     
     <TextView
+        style="@style/textStyle19_option1"
         android:id="@+id/media_empty_TV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/layuot_16dp"
+        android:layout_marginTop="@dimen/layout_16dp"
         android:text="@string/media_empty"
-        android:layout_gravity="center"
-        android:textColor="?attr/black_white"/>
+        android:layout_gravity="center" />
 
 </LinearLayout>

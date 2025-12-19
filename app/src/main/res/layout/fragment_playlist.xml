@@ -4,19 +4,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="?attr/white_black">
 
     <com.google.android.material.button.MaterialButton
+        style="@style/textButtonStyle14_option3"
         android:id="@+id/newPlaylistButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:backgroundTint="?attr/black_white"
         android:text="@string/new_playlists"
-        android:textColor="?attr/white_black"
-        android:textAllCaps="false"
-        app:cornerRadius="54dp"
         app:layout_constraintBottom_toTopOf="@id/noMusicIV"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,26 +21,25 @@
 
     <ImageView
         android:id="@+id/noMusicIV"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="46dp"
+        android:layout_marginBottom="16dp"
         android:src="@drawable/ic_no_music"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/newPlaylistButton"
-        app:layout_constraintBottom_toTopOf="@id/playlistsNotCreatedTV" />
+        app:layout_constraintBottom_toTopOf="@id/playlistsNotCreatedTV"/>
 
     <TextView
+        style="@style/textStyles19_option2"
         android:id="@+id/playlistsNotCreatedTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/layuot_16dp"
+        android:layout_marginTop="@dimen/layout_16dp"
         android:text="@string/playlists_not_created"
-        android:textColor="?attr/black_white"
-        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/noMusicIV"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@+id/noMusicIV" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,11 +7,14 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.example.my.databinding.FragmentFavoriteTracksBinding
+import com.example.my.mediaLibrary.presentation.view_model.FavoriteTracksViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavoriteTracksFragment : Fragment() {
 
     private var _binding: FragmentFavoriteTracksBinding? = null
     private val binding get() = _binding!!
+    private val viewModel: FavoriteTracksViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,9 +38,10 @@ class FavoriteTracksFragment : Fragment() {
     }
 
     companion object {
-        private const val SONG_NAME_KEY = "SONG_NAME_KEY"
 
-        fun getInstance(songName: Int): FavoriteTracksFragment = FavoriteTracksFragment().apply {
-            arguments = bundleOf(SONG_NAME_KEY to songName)
+
+        fun getInstance(): FavoriteTracksFragment {
+            return FavoriteTracksFragment()
         }
-}}
+    }
+}

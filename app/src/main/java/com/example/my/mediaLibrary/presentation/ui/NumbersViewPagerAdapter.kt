@@ -14,9 +14,9 @@ class NumbersViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifec
 
     override fun createFragment(position: Int): Fragment {
         return when(position) {
-            0 -> FavoriteTracksFragment.getInstance(position + 1)
+            0 -> FavoriteTracksFragment.getInstance()
             1 -> PlaylistsFragment.getInstance(position + 1)
-            else -> throw IllegalStateException("Invalid position")
+            else -> PlaylistsFragment.getInstance(position + 1)
         }
     }
 }

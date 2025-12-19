@@ -10,45 +10,42 @@
         android:id="@+id/back"
         style="@style/MyToolbarTitleTextAppearance"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/layuot_56dp"
+        android:layout_height="@dimen/layout_56dp"
         app:layout_constraintBottom_toTopOf="@id/tabLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_back"
-        app:title="@string/media_library" />
+        app:title="@string/media_library"/>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/layuot_48dp"
-        app:layout_constraintBottom_toTopOf="@id/viewPager"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/back"
-        app:tabTextAppearance="@style/MyTabTextAppearance"
-        app:tabIndicatorColor="?attr/black_white"
+        android:layout_height="@dimen/layout_48dp"
         android:background="?attr/white_black"
+        app:layout_constraintBottom_toTopOf="@id/viewPager"
+        app:layout_constraintTop_toBottomOf="@id/back"
+        app:tabTextAppearance="@style/textStyle14_option2"
+        app:tabIndicatorColor="?attr/black_white"
         app:tabTextColor="?attr/black_white">
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/favorite_tracks" />
+            android:text="@string/favorite_tracks"/>
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/playlists" />
+            android:text="@string/playlists"/>
 
     </com.google.android.material.tabs.TabLayout>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
-        android:layout_width="@dimen/layuot_0dp"
-        android:layout_height="@dimen/layuot_0dp"
+        android:layout_width="@dimen/layout_0dp"
+        android:layout_height="@dimen/layout_0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tabLayout" />
+        app:layout_constraintTop_toBottomOf="@id/tabLayout"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
