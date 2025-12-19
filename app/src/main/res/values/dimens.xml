@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
         <!-- Main layout -->
-        <dimen name="layuot_0dp">0dp</dimen>
-        <dimen name="layuot_4dp">4dp</dimen>
-        <dimen name="layuot_8dp">8dp</dimen>
-        <dimen name="layuot_12dp">12dp</dimen>
-        <dimen name="layuot_16dp">16dp</dimen>
-        <dimen name="layuot_20dp">20dp</dimen>
-        <dimen name="layuot_24dp">24dp</dimen>
-        <dimen name="layuot_26dp">26dp</dimen>
-        <dimen name="layuot_28dp">28dp</dimen>
-        <dimen name="layuot_30dp">30dp</dimen>
-        <dimen name="layuot_32dp">32dp</dimen>
-        <dimen name="layuot_36dp">36dp</dimen>
-        <dimen name="layuot_44dp">44dp</dimen>
-        <dimen name="layuot_48dp">48dp</dimen>
-        <dimen name="layuot_56dp">56dp</dimen>
-        <dimen name="layuot_60dp">60dp</dimen>
-        <dimen name="layuot_66dp">66dp</dimen>
-        <dimen name="layuot_248dp">248dp</dimen>
+        <dimen name="layout_0dp">0dp</dimen>
+        <dimen name="layout_4dp">4dp</dimen>
+        <dimen name="layout_8dp">8dp</dimen>
+        <dimen name="layout_12dp">12dp</dimen>
+        <dimen name="layout_16dp">16dp</dimen>
+        <dimen name="layout_20dp">20dp</dimen>
+        <dimen name="layout_24dp">24dp</dimen>
+        <dimen name="layout_26dp">26dp</dimen>
+        <dimen name="layout_28dp">28dp</dimen>
+        <dimen name="layout_30dp">30dp</dimen>
+        <dimen name="layout_32dp">32dp</dimen>
+        <dimen name="layout_36dp">36dp</dimen>
+        <dimen name="layout_44dp">44dp</dimen>
+        <dimen name="layout_48dp">48dp</dimen>
+        <dimen name="layout_56dp">56dp</dimen>
+        <dimen name="layout_60dp">60dp</dimen>
+        <dimen name="layout_66dp">66dp</dimen>
+        <dimen name="layout_248dp">248dp</dimen>
 
         <!-- Button margins -->
         <dimen name="button_top_margin">80dp</dimen>

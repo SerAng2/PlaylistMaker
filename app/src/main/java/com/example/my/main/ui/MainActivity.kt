@@ -6,7 +6,7 @@ import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.my.databinding.ActivityMainBinding
-import com.example.my.mediaLibrary.ui.MediaLibraryActivity
+import com.example.my.mediaLibrary.presentation.ui.MediaLibraryActivity
 import com.example.my.search.presentation.ui.SearchActivity
 import com.example.my.setting.presentation.ui.SettingsActivity
 

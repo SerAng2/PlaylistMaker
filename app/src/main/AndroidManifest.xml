@@ -23,7 +23,7 @@
             android:exported="false" />
 
         <activity
-            android:name="com.example.my.mediaLibrary.ui.MediaLibraryActivity"
+            android:name="com.example.my.mediaLibrary.presentation.ui.MediaLibraryActivity"
             android:exported="false" />
 
         <activity

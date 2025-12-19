@@ -2,6 +2,7 @@ package com.example.my.common.presentation
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.my.mediaLibrary.di.mediaLibraryViewModelModule
 import com.example.my.player.di.playerModule
 import com.example.my.search.di.historyRepositoryModule
 import com.example.my.search.di.performSearchModule
@@ -32,7 +33,8 @@ class AppTheme() : Application() {
                 performSearchModule,
                 searchViewModelModule,
                 switchThemeModule,
-                playerModule
+                playerModule,
+                mediaLibraryViewModelModule
             )
         }
 

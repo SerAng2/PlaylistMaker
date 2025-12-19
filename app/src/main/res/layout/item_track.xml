@@ -2,31 +2,31 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/layuot_60dp">
+    android:layout_height="@dimen/layout_60dp">
 
     <ImageView
         android:id="@+id/artwork"
-        android:layout_width="@dimen/layuot_44dp"
-        android:layout_height="@dimen/layuot_44dp"
-        android:layout_marginStart="@dimen/layuot_12dp"
-        android:layout_marginVertical="@dimen/layuot_8dp"/>
+        android:layout_width="@dimen/layout_44dp"
+        android:layout_height="@dimen/layout_44dp"
+        android:layout_marginStart="@dimen/layout_12dp"
+        android:layout_marginVertical="@dimen/layout_8dp"/>
 
     <TextView
         android:id="@+id/trackName"
         style="@style/textStyle16"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/layuot_20dp"
-        android:layout_marginStart="@dimen/layuot_66dp"
+        android:layout_height="@dimen/layout_20dp"
+        android:layout_marginStart="@dimen/layout_66dp"
         android:layout_marginTop="14dp"
-        android:layout_marginEnd="@dimen/layuot_44dp"
+        android:layout_marginEnd="@dimen/layout_44dp"
         android:maxLines="1"
         android:ellipsize="end" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/layuot_16dp"
-        android:layout_marginStart="@dimen/layuot_66dp"
-        android:layout_marginEnd="@dimen/layuot_44dp"
+        android:layout_height="@dimen/layout_16dp"
+        android:layout_marginStart="@dimen/layout_66dp"
+        android:layout_marginEnd="@dimen/layout_44dp"
         android:layout_marginTop="34dp" >
 
         <TextView
@@ -37,8 +37,8 @@
 
         <ImageView
             android:id="@+id/icon"
-            android:layout_width="@dimen/layuot_16dp"
-            android:layout_height="@dimen/layuot_16dp"
+            android:layout_width="@dimen/layout_16dp"
+            android:layout_height="@dimen/layout_16dp"
             android:src="@drawable/ic_point"
             app:tint="?attr/gray_white"/>
 
@@ -55,7 +55,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_user_agreement"
         android:layout_gravity="end|center_vertical"
-        android:layout_marginEnd="@dimen/layuot_20dp"
+        android:layout_marginEnd="@dimen/layout_20dp"
         app:tint="?attr/gray_white"/>
 
 </FrameLayout>
