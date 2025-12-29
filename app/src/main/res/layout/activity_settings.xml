@@ -13,16 +13,16 @@
         android:id="@+id/container"
         style="@style/MyToolbarTitleTextAppearance"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/layuot_56dp"
+        android:layout_height="@dimen/layout_56dp"
         app:navigationIcon="@drawable/ic_back"
         app:title="@string/settings_title" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/layuot_24dp"
+        android:layout_marginTop="@dimen/layout_24dp"
         android:orientation="vertical"
-        android:paddingStart="@dimen/layuot_16dp"
+        android:paddingStart="@dimen/layout_16dp"
         android:paddingEnd="18dp" >
 
 
@@ -30,7 +30,7 @@
             android:id="@+id/themeSwitcher"
             style="@style/settingsItem"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/layuot_60dp"
+            android:layout_height="@dimen/layout_60dp"
             android:text="@string/dark_theme"
             app:thumbTint="@color/switch_thumb_tint_selector"
             app:trackTint="@color/switch_track_selector" />
@@ -39,7 +39,7 @@
             android:id="@+id/share_app_TV"
             style="@style/settingsItem"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/layuot_60dp"
+            android:layout_height="@dimen/layout_60dp"
             android:text="@string/share_app"
             app:drawableEndCompat="@drawable/ic_share" />
 
@@ -47,7 +47,7 @@
             android:id="@+id/contact_support_TV"
             style="@style/settingsItem"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/layuot_60dp"
+            android:layout_height="@dimen/layout_60dp"
             android:text="@string/contact_support"
             app:drawableEndCompat="@drawable/ic_write_to_support" />
 
@@ -55,7 +55,7 @@
             android:id="@+id/user_agreement_TV"
             style="@style/settingsItem"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/layuot_60dp"
+            android:layout_height="@dimen/layout_60dp"
             android:text="@string/user_agreement"
             app:drawableEndCompat="@drawable/ic_user_agreement" />
 
