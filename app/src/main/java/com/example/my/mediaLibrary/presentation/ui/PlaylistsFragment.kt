@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import com.example.my.R
 import com.example.my.databinding.FragmentPlaylistBinding
 
 class PlaylistsFragment : Fragment() {
@@ -27,7 +28,10 @@ class PlaylistsFragment : Fragment() {
 
         binding.noMusicIV
         binding.playlistsNotCreatedTV
+
     }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -40,5 +44,8 @@ class PlaylistsFragment : Fragment() {
         fun getInstance(songName: Int): PlaylistsFragment = PlaylistsFragment().apply {
             arguments = bundleOf(SONG_NAME_KEY to songName)
         }
+    }
+    private fun showPlaceholderNoResults() {
+
     }
 }

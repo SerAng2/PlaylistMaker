@@ -15,25 +15,11 @@
         android:theme="@style/Theme.PlaylistMaker">
 
         <activity
-            android:name="com.example.my.search.presentation.ui.SearchActivity"
-            android:exported="false" />
-
-        <activity
-            android:name="com.example.my.player.presentation.ui.PlayerActivity"
-            android:exported="false" />
-
-        <activity
-            android:name="com.example.my.mediaLibrary.presentation.ui.MediaLibraryActivity"
-            android:exported="false" />
-
-        <activity
-            android:name="com.example.my.setting.presentation.ui.SettingsActivity"
-            android:exported="false" />
-
-        <activity
-            android:name="com.example.my.main.ui.MainActivity"
+            android:name="com.example.my.common.presentation.ui.RootActivity"
+            android:windowSoftInputMode="adjustNothing|stateHidden"
             android:exported="true">
-            <intent-filter>
+
+        <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />

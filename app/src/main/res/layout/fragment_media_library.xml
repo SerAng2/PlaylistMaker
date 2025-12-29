@@ -7,13 +7,12 @@
     android:orientation="vertical">
 
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/back"
+        android:id="@+id/mediaLibrary"
         style="@style/MyToolbarTitleTextAppearance"
         android:layout_width="match_parent"
         android:layout_height="@dimen/layout_56dp"
         app:layout_constraintBottom_toTopOf="@id/tabLayout"
         app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@drawable/ic_back"
         app:title="@string/media_library"/>
 
     <com.google.android.material.tabs.TabLayout
@@ -22,7 +21,7 @@
         android:layout_height="@dimen/layout_48dp"
         android:background="?attr/white_black"
         app:layout_constraintBottom_toTopOf="@id/viewPager"
-        app:layout_constraintTop_toBottomOf="@id/back"
+        app:layout_constraintTop_toBottomOf="@id/mediaLibrary"
         app:tabTextAppearance="@style/textStyle14_option2"
         app:tabIndicatorColor="?attr/black_white"
         app:tabTextColor="?attr/black_white">
@@ -41,8 +40,8 @@
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
-        android:layout_width="@dimen/layout_0dp"
-        android:layout_height="@dimen/layout_0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

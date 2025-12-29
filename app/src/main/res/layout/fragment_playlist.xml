@@ -5,14 +5,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/white_black">
+    android:background="?attr/white_black"
+    tools:layout="@layout/fragment_media_library">
 
     <com.google.android.material.button.MaterialButton
         style="@style/textButtonStyle14_option3"
         android:id="@+id/newPlaylistButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="@dimen/layout_24dp"
         android:text="@string/new_playlists"
         app:layout_constraintBottom_toTopOf="@id/noMusicIV"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,7 +22,7 @@
 
     <ImageView
         android:id="@+id/noMusicIV"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="46dp"
         android:layout_marginBottom="16dp"
@@ -32,12 +33,13 @@
         app:layout_constraintBottom_toTopOf="@id/playlistsNotCreatedTV"/>
 
     <TextView
-        style="@style/textStyles19_option2"
         android:id="@+id/playlistsNotCreatedTV"
+        style="@style/textStyles19_option2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/layout_16dp"
         android:text="@string/playlists_not_created"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/noMusicIV" />

@@ -1,33 +1,46 @@
 package com.example.my.search.presentation.ui
 
-import android.content.Intent
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.my.R
-import com.example.my.databinding.ActivitySearchBinding
+import com.example.my.databinding.FragmentSearchBinding
 import com.example.my.player.presentation.state.TrackViewState
-import com.example.my.player.presentation.ui.PlayerActivity
+import com.example.my.player.presentation.ui.PlayerFragment
 import com.example.my.search.presentation.state.TracksState
 import com.example.my.search.presentation.view_model.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity() {
+class SearchFragment : Fragment() {
 
-    private lateinit var binding: ActivitySearchBinding
+    private var _binding: FragmentSearchBinding? = null
+    private val binding get() = _binding!!
     private lateinit var adapter: TrackAdapter
     private val viewModel: SearchViewModel by viewModel()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    // ДОБАВЛЕНО: Инициализируем View Binding
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    // ДОБАВЛЕНО: Очищаем binding на destroy, чтобы избежать утечек
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         showLoading()
 
@@ -35,22 +48,30 @@ class SearchActivity : AppCompatActivity() {
             // Добавление трека в историю поиска
             viewModel.add(track)
 
-            // Создание Intent для перехода на экран Player
+            // Проверка на debounce
             if (viewModel.clickDebounce()) {
-                val intent = Intent(this, PlayerActivity::class.java).apply {
-                    putExtra(TRACK_DATA, track)
+                // Создание Bundle для передачи данных в фрагмент
+
+                val bundle = Bundle().apply {
+                    putParcelable(TRACK_DATA, track) // Используй putSerializable, если Track не реализует Parcelable
                 }
-                // Запуск нового Activity
-                startActivity(intent)
+                // Создание экземпляра PlayerFragment
+                val playerFragment = PlayerFragment().apply {
+                    arguments = bundle
+                }
+
+                // Замена текущего фрагмента на PlayerFragment
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.nav_host_fragment, playerFragment) // Убедись, что у тебя правильный ID контейнера
+                    .addToBackStack(null) // Сохраняем в BackStack, чтобы можно было вернуться назад
+                    .commit()
             }
         }
 
-
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
 
         setupSearchField()
-        setupToolbar()
         setupRetryButton()
         setupObservers()
 
@@ -61,10 +82,6 @@ class SearchActivity : AppCompatActivity() {
 
     private fun updateClearButtonVisibility(isVisible: Boolean) {
         binding.clearButton.isVisible = isVisible
-    }
-
-    private fun setupToolbar() {
-        binding.toolbar.setNavigationOnClickListener { finish() }
     }
 
     private fun setupRetryButton() {
@@ -207,7 +224,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun hideKeyboard() {
-        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm = requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.searchEditText.windowToken, 0)
     }
 
@@ -221,7 +238,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun setupObservers() {
-        viewModel.observeState().observe(this) { state ->
+        viewModel.observeState().observe(viewLifecycleOwner) { state ->
             when (state) {
                 is TracksState.Loading -> showLoading()
                 is TracksState.Content -> showTracks(state.tracks)

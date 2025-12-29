@@ -51,6 +51,8 @@ dependencies {
     implementation (libs.material)
     implementation (libs.glide)
     implementation(libs.firebase.crashlytics.buildtools)
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
     annotationProcessor (libs.compiler)
     implementation (libs.retrofit)
     implementation (libs.converter.gson)
@@ -66,4 +68,5 @@ dependencies {
     implementation(libs.material.v180)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.viewpager2)
+
 }

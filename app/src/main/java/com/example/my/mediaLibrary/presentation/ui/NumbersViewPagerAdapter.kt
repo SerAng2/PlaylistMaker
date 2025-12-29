@@ -16,8 +16,7 @@ class NumbersViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifec
         return when(position) {
             0 -> FavoriteTracksFragment.getInstance()
             1 -> PlaylistsFragment.getInstance(position + 1)
-            else -> PlaylistsFragment.getInstance(position + 1)
+            else -> throw IllegalArgumentException("Invalid position $position")
         }
     }
 }
-
