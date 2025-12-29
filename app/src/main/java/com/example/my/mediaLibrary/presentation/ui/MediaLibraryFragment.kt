@@ -14,7 +14,7 @@ class MediaLibraryFragment() : Fragment() {
 
     private var _binding: FragmentMediaLibraryBinding? = null
     private val binding get() = _binding!!
-    private lateinit var tabMediator: TabLayoutMediator
+    private var tabMediator: TabLayoutMediator? = null
     private val viewModel: MediaLibraryViewModel by viewModel()
 
     override fun onCreateView(
@@ -34,12 +34,13 @@ class MediaLibraryFragment() : Fragment() {
         tabMediator = TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = getString(viewModel.tabTitles[position])
         }
-        tabMediator.attach()
+        tabMediator?.attach()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        tabMediator.detach()
+        tabMediator?.detach()
         _binding = null
+        tabMediator = null
     }
 }
