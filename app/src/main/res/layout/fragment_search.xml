@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/searchLinearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="?attr/white_black"
-    android:theme="@style/Theme.PlaylistMaker">
+    android:theme="@style/Theme.PlaylistMaker"
+    tools:context="com.example.my.search.presentation.ui.SearchFragment">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
@@ -15,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/layout_56dp"
         android:gravity="center_vertical"
-        app:navigationIcon="@drawable/ic_back"
+        android:paddingStart="@dimen/layout_16dp"
         app:title="@string/search" />
 
     <FrameLayout
