@@ -1,7 +1,5 @@
 package com.example.my.search.presentation.view_model
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,7 +10,12 @@ import com.example.my.player.presentation.state.TrackViewState
 import com.example.my.search.domain.interactor.SearchHistoryInteractor
 import com.example.my.search.domain.use_case.PerformSearchUseCase
 import com.example.my.search.presentation.state.TracksState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import okhttp3.Dispatcher
 
 class SearchViewModel(
     private val performSearch: PerformSearchUseCase,
@@ -21,25 +24,21 @@ class SearchViewModel(
 
     private var isClickAllowed = true
     private var lastSearchTerm: String? = null
-    private var handler = Handler(Looper.getMainLooper())
+    private var searchJob: Job? = null
 
     private val stateLiveData = MutableLiveData<TracksState>(TracksState.PlaceholderNone)
     fun observeState(): LiveData<TracksState> = stateLiveData
 
-    private val searchRunnable = Runnable {
-        val query = lastSearchTerm
-        if (!query.isNullOrEmpty()) {
-            searchTracks(query)
+    fun searchDebounce(changedText: String) {
+        if (lastSearchTerm == changedText) {
+            return
         }
-    }
+        lastSearchTerm = changedText
 
-    fun searchDebounce(query: String) {
-        lastSearchTerm = query
-        handler.removeCallbacks(searchRunnable)
-        if (query.isNotEmpty()) {
-            handler.postDelayed(searchRunnable, CLICK_DEBOUNCE_DELAY)
-        } else {
-            displaySearchHistory()
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(CLICK_DEBOUNCE_DELAY)
+            performSearch(changedText)
         }
     }
 
@@ -80,73 +79,75 @@ class SearchViewModel(
     }
 
     fun displaySearchHistory() {
-        val history = historyInteractor.getHistory()
-        if (history.isNotEmpty()) {
-            val uiModels =
-                history.map { it.toTrackViewState() } // Преобразование в List<TrackViewState>
-            stateLiveData.postValue(TracksState.History(uiModels)) // Теперь типы совпадают — ошибка уйдет
-        } else {
+        viewModelScope.launch {
+            historyInteractor.getHistory()
+                .collect { history ->
+                    if (history.isNotEmpty()) {
+                        val uiModels =
+                            history.map { it.toTrackViewState() } // Преобразование в List<TrackViewState>
+                        stateLiveData.postValue(TracksState.History(uiModels)) // Теперь типы совпадают — ошибка уйдет
+                    } else {
+                        stateLiveData.postValue(TracksState.PlaceholderNone)
+                    }
+                }
+        }
+    }
+
+        fun clearHistory() {
+            historyInteractor.clearHistory()
             stateLiveData.postValue(TracksState.PlaceholderNone)
         }
-    }
 
-    fun clearHistory() {
-        historyInteractor.clearHistory()
-        stateLiveData.postValue(TracksState.PlaceholderNone)
-    }
-
-    fun clickDebounce(): Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        fun clickDebounce(): Boolean {
+            val current = isClickAllowed
+            if (isClickAllowed) {
+                isClickAllowed = false
+                viewModelScope.launch {
+                    delay(CLICK_DEBOUNCE_DELAY)
+                    isClickAllowed = true
+                }
+            }
+            return current
         }
-        return current
-    }
 
-    fun add(track: TrackViewState) {
-        val domainTrack = track.toDomainTrack()
-        historyInteractor.addTrack(domainTrack)
-    }
+        fun add(track: TrackViewState) {
+            val domainTrack = track.toDomainTrack()
+            historyInteractor.addTrack(domainTrack)
+        }
 
-    override fun onCleared() {
-        super.onCleared()
-        handler.removeCallbacks(searchRunnable)
-    }
+        fun Track.toTrackViewState(): TrackViewState {
+            return TrackViewState(
+                trackId = trackId,
+                trackName = trackName,
+                artistName = artistName,
+                trackTime = trackTime ?: "Unknown",
+                artworkUrl100 = artworkUrl100,
+                collectionName = collectionName,
+                releaseDate = releaseDate,
+                primaryGenreName = primaryGenreName,
+                genre = genre,
+                country = country,
+                previewUrl = previewUrl
+            )
+        }
 
-    fun Track.toTrackViewState(): TrackViewState {
-        return TrackViewState(
-            trackId = trackId,
-            trackName = trackName,
-            artistName = artistName,
-            trackTime = trackTime ?: "Unknown",
-            artworkUrl100 = artworkUrl100,
-            collectionName = collectionName,
-            releaseDate = releaseDate,
-            primaryGenreName = primaryGenreName,
-            genre = genre,
-            country = country,
-            previewUrl = previewUrl
-        )
-    }
+        fun TrackViewState.toDomainTrack(): Track {
+            return Track(
+                trackId = trackId,
+                trackName = trackName,
+                artistName = artistName,
+                trackTime = trackTime,
+                artworkUrl100 = artworkUrl100,
+                collectionName = collectionName,
+                releaseDate = releaseDate,
+                primaryGenreName = primaryGenreName,
+                genre = genre,
+                country = country,
+                previewUrl = previewUrl
+            )
+        }
 
-    fun TrackViewState.toDomainTrack(): Track {
-        return Track(
-            trackId = trackId,
-            trackName = trackName,
-            artistName = artistName,
-            trackTime = trackTime,
-            artworkUrl100 = artworkUrl100,
-            collectionName = collectionName,
-            releaseDate = releaseDate,
-            primaryGenreName = primaryGenreName,
-            genre = genre,
-            country = country,
-            previewUrl = previewUrl
-        )
+        companion object {
+            private const val CLICK_DEBOUNCE_DELAY = 2000L
+        }
     }
-
-    companion object {
-        private const val CLICK_DEBOUNCE_DELAY = 2000L
-    }
-}
