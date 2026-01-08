@@ -31,7 +31,7 @@
         android:id="@+id/playerFragment"
         android:name="com.example.my.player.presentation.ui.PlayerFragment"
         android:label="PlayerFragment"
-        tools:layout="@layout/fragment_audio_player">
+        tools:layout="@layout/fragment_player">
 
         <argument
             android:name="track"

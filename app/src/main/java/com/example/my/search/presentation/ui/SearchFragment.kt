@@ -11,11 +11,11 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.my.R
 import com.example.my.databinding.FragmentSearchBinding
 import com.example.my.player.presentation.state.TrackViewState
-import com.example.my.player.presentation.ui.PlayerFragment
 import com.example.my.search.presentation.state.TracksState
 import com.example.my.search.presentation.view_model.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -55,16 +55,7 @@ class SearchFragment : Fragment() {
                 val bundle = Bundle().apply {
                     putParcelable(TRACK_DATA, track) // Используй putSerializable, если Track не реализует Parcelable
                 }
-                // Создание экземпляра PlayerFragment
-                val playerFragment = PlayerFragment().apply {
-                    arguments = bundle
-                }
-
-                // Замена текущего фрагмента на PlayerFragment
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.nav_host_fragment, playerFragment) // Убедись, что у тебя правильный ID контейнера
-                    .addToBackStack(null) // Сохраняем в BackStack, чтобы можно было вернуться назад
-                    .commit()
+                findNavController().navigate(R.id.actionSearchToPlayer, bundle)
             }
         }
 
