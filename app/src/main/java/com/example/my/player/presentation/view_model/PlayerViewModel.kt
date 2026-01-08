@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.my.common.domain.model.Track
 import com.example.my.player.presentation.state.PlayerState
 import com.example.my.player.presentation.state.TrackViewState
+import com.example.my.player.presentation.utils.formatToMMSS
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -25,6 +26,7 @@ class PlayerViewModel(private val mediaPlayer: MediaPlayer) : ViewModel() {
 
     private var track: Track? = null
     private var timerJob: Job? = null
+    private val dateFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
 
     fun onPause() {
         pausePlayer()
@@ -35,11 +37,9 @@ class PlayerViewModel(private val mediaPlayer: MediaPlayer) : ViewModel() {
             is PlayerState.Playing -> {
                 pausePlayer()
             }
-
             is PlayerState.Prepared, is PlayerState.Paused -> {
                 startPlayer()
             }
-
             else -> {}
         }
     }
@@ -72,17 +72,20 @@ class PlayerViewModel(private val mediaPlayer: MediaPlayer) : ViewModel() {
     }
 
     private fun startTimer() {
+        timerJob?.cancel()
         timerJob = viewModelScope.launch {
             while (mediaPlayer.isPlaying) {
-                delay(300L)
+                delay(
+                    timeMillis = DELAY_TIME_MS
+                )
                 playerState.postValue(PlayerState.Playing(getCurrentPlayerPosition()))
             }
         }
     }
 
     private fun getCurrentPlayerPosition(): String {
-        return SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition)
-            ?: "00:00"
+        return dateFormat.format(mediaPlayer.currentPosition)
+            ?: 0L.formatToMMSS()
     }
 
     fun loadTrackInfo(track: TrackViewState?) {
@@ -105,5 +108,9 @@ class PlayerViewModel(private val mediaPlayer: MediaPlayer) : ViewModel() {
             country = country,
             previewUrl = previewUrl,
         )
+    }
+
+    companion object {
+        private const val DELAY_TIME_MS = 300L
     }
 }

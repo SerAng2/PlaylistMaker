@@ -10,12 +10,10 @@ import com.example.my.player.presentation.state.TrackViewState
 import com.example.my.search.domain.interactor.SearchHistoryInteractor
 import com.example.my.search.domain.use_case.PerformSearchUseCase
 import com.example.my.search.presentation.state.TracksState
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import okhttp3.Dispatcher
 
 class SearchViewModel(
     private val performSearch: PerformSearchUseCase,
@@ -34,7 +32,6 @@ class SearchViewModel(
             return
         }
         lastSearchTerm = changedText
-
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
             delay(CLICK_DEBOUNCE_DELAY)
@@ -55,18 +52,20 @@ class SearchViewModel(
         stateLiveData.postValue(TracksState.Loading)
         viewModelScope.launch {
             try {
-                val tracks = performSearch.performSearch(query)
-                if (tracks.isEmpty()) {
-                    stateLiveData.postValue(
-                        TracksState.Empty(
-                            R.string.no_results_found,
-                            R.drawable.ic_no_music
-                        )
-                    )
-                } else {
-                    val uiModels = tracks.map { it.toTrackViewState() }
-                    stateLiveData.postValue(TracksState.Content(uiModels))
-                }
+                performSearch.performSearch(query)
+                    .collect { tracks ->
+                        if (tracks.isEmpty()) {
+                            stateLiveData.postValue(
+                                TracksState.Empty(
+                                    R.string.no_results_found,
+                                    R.drawable.ic_no_music
+                                )
+                            )
+                        } else {
+                            val uiModels = tracks.map { it.toTrackViewState() }
+                            stateLiveData.postValue(TracksState.Content(uiModels))
+                        }
+                    }
             } catch (e: Exception) {
                 stateLiveData.postValue(
                     TracksState.Error(
@@ -120,7 +119,7 @@ class SearchViewModel(
                 trackId = trackId,
                 trackName = trackName,
                 artistName = artistName,
-                trackTime = trackTime ?: "Unknown",
+                trackTime = trackTime,
                 artworkUrl100 = artworkUrl100,
                 collectionName = collectionName,
                 releaseDate = releaseDate,

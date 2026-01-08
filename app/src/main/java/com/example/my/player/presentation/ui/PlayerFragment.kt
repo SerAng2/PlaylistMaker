@@ -13,7 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.my.R
-import com.example.my.databinding.FragmentAudioPlayerBinding
+import com.example.my.databinding.FragmentPlayerBinding
 import com.example.my.player.presentation.state.TrackViewState
 import com.example.my.player.presentation.utils.DisplayPx
 import com.example.my.player.presentation.view_model.PlayerViewModel
@@ -23,10 +23,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlayerFragment : Fragment() {
 
-    private var _binding: FragmentAudioPlayerBinding? = null
+    private var _binding: FragmentPlayerBinding? = null
     private val binding get() = _binding!!
     private val viewModel: PlayerViewModel by viewModel()
-
     private var track: TrackViewState? = null
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -35,7 +34,7 @@ class PlayerFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentAudioPlayerBinding.inflate(
+        _binding = FragmentPlayerBinding.inflate(
             inflater,
             container,
             false

@@ -5,23 +5,24 @@ import com.example.my.search.data.mapper.MapperTrackResponse
 import com.example.my.search.data.network.RetrofitNetworkClient
 import com.example.my.search.domain.repository.PerformSearchRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 
 class PerformSearchRepositoryImpl : PerformSearchRepository {
-    override suspend fun performSearch(term: String): List<Track> {
-        return withContext(Dispatchers.IO) {
+    override suspend fun performSearch(term: String): Flow<List<Track>> = flow {
             val response = RetrofitNetworkClient.api.searchSongs(term)
-            (if (response.isSuccessful) {
+            if (response.isSuccessful) {
                 val body = response.body()
                 val results = body?.results ?: emptyList()
                 val tracks = results.map {
                     MapperTrackResponse.mapTrackResponse(it)
                 }
-                tracks
+                emit(tracks)
             } else {
                 val error = Exception("API Error: ${response.message()}")
                 throw error
-            })
+            }
         }
     }
-}
+

@@ -34,15 +34,13 @@ class SearchHistoryRepositoryImpl(
             sharedPreferences?.edit()?.remove(HISTORY_KEY)?.apply()
         }
     }
-    override suspend fun saveHistory(history: List<Track>) { // сохранить историю repository
-        withContext(Dispatchers.IO) {
-            val json = gson?.toJson(history)
 
-            sharedPreferences?.edit()?.putString(HISTORY_KEY, json)?.apply()
-        }
+    override suspend fun saveHistory(history: List<Track>) { // сохранить историю repository
+        val json = gson?.toJson(history)
+        sharedPreferences?.edit()?.putString(HISTORY_KEY, json)?.apply()
     }
+
     companion object {
         private const val HISTORY_KEY = "search_history"
     }
-
 }
