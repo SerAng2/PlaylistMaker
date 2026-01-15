@@ -13,7 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.my.R
-import com.example.my.databinding.FragmentAudioPlayerBinding
+import com.example.my.databinding.FragmentPlayerBinding
 import com.example.my.player.presentation.state.TrackViewState
 import com.example.my.player.presentation.utils.DisplayPx
 import com.example.my.player.presentation.view_model.PlayerViewModel
@@ -23,10 +23,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlayerFragment : Fragment() {
 
-    private var _binding: FragmentAudioPlayerBinding? = null
+    private var _binding: FragmentPlayerBinding? = null
     private val binding get() = _binding!!
     private val viewModel: PlayerViewModel by viewModel()
-
     private var track: TrackViewState? = null
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -35,7 +34,7 @@ class PlayerFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentAudioPlayerBinding.inflate(
+        _binding = FragmentPlayerBinding.inflate(
             inflater,
             container,
             false
@@ -59,13 +58,10 @@ class PlayerFragment : Fragment() {
             displayTrackInfo(track!!)
         }
 
-        viewModel.playerStateLiveData.observe(this) {
-            changeButtonIcon(it == PlayerViewModel.Companion.STATE_PLAYING)
-            enableButton(it != PlayerViewModel.Companion.STATE_DEFAULT)
-        }
-
-        viewModel.currentTrack.observe(this) {
-            binding.playingTime.text = it as? CharSequence
+        viewModel.observePlayerState().observe(viewLifecycleOwner) {
+            binding.playButton.isEnabled = it.isPlayButtonEnabled
+            binding.playButton.setImageResource(it.buttonText)
+            binding.playingTime.text = it.progress
         }
 
         binding.playButton.setOnClickListener {
@@ -98,7 +94,7 @@ class PlayerFragment : Fragment() {
     }
 
     private fun setupTrackInfoObserver() {
-        viewModel.observeTrack.observe(this) { uiModel ->
+        viewModel.observeTrack.observe(viewLifecycleOwner) { uiModel ->
             uiModel?.let { displayTrackInfo(it) }
         }
     }
@@ -123,15 +119,6 @@ class PlayerFragment : Fragment() {
             yearMusic.text =
                 track.releaseDate?.substring(0, 4) ?: "Unknown"
         }
-    }
-
-    private fun enableButton(isEnabled: Boolean) {
-        binding.playButton.isEnabled = isEnabled
-    }
-
-    private fun changeButtonIcon(isPlaying: Boolean) {
-        val iconRes = if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play
-        binding.playButton.setImageResource(iconRes)
     }
 
     override fun onDestroyView() {
