@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:background="?attr/white_black"
     android:theme="@style/Theme.PlaylistMaker"
-    tools:context="com.example.my.search.presentation.ui.SearchFragment">
+    tools:context="com.example.playlistMaker.search.presentation.ui.SearchFragment">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"

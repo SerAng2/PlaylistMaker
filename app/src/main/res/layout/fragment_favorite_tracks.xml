@@ -1,28 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/white_black"
-    android:orientation="vertical">
+    android:orientation="horizontal">
 
-    <ImageView
-        android:id="@+id/no_music_IV"
-        android:layout_width="wrap_content"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_favorite"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/placeholderGroupFavorite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="106dp"
-        android:src="@drawable/ic_no_music"
-        tools:ignore="ContentDescription"/>
-    
-    <TextView
-        style="@style/textStyle19_option1"
-        android:id="@+id/media_empty_TV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/layout_16dp"
-        android:text="@string/media_empty"
-        android:layout_gravity="center" />
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/no_music_IV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_no_music"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/media_empty_TV"
+            style="@style/textStyle19_option1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/layout_16dp"
+            android:text="@string/media_empty" />
+
+    </LinearLayout>
+
+
+
 
 </LinearLayout>
