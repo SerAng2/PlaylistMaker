@@ -2,10 +2,11 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("kotlin-parcelize")
+    id ("kotlin-kapt")
 }
 
 android {
-    namespace = "com.example.my"
+    namespace = "com.example.playlistMaker"
     compileSdk = 36
 
     buildFeatures {
@@ -53,6 +54,7 @@ dependencies {
     implementation(libs.firebase.crashlytics.buildtools)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.androidx.room.common.jvm)
     annotationProcessor (libs.compiler)
     implementation (libs.retrofit)
     implementation (libs.converter.gson)
@@ -68,5 +70,7 @@ dependencies {
     implementation(libs.material.v180)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.viewpager2)
-
+    implementation("androidx.room:room-runtime: 2.8.4")
+    implementation("androidx.room:room-ktx:2.6.1")
+    kapt ("androidx.room:room-compiler:2.8.4")
 }

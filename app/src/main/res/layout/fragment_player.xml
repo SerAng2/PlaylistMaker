@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/white_black"
-    tools:context="com.example.my.player.presentation.ui.PlayerFragment">
+    tools:context="com.example.playlistMaker.player.presentation.ui.PlayerFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -79,13 +79,12 @@
             android:src="@drawable/ic_play"
             android:contentDescription="Play/Pause"
             app:tint="?attr/black_white"
-
             app:layout_constraintTop_toBottomOf="@+id/nameMusic"
             app:layout_constraintEnd_toStartOf="@id/favourites"
             app:layout_constraintStart_toEndOf="@id/add"
             app:layout_constraintBottom_toTopOf="@id/playingTime" />
 
-        <androidx.constraintlayout.utils.widget.ImageFilterView
+        <ImageView
             android:id="@+id/favourites"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -94,7 +93,7 @@
             app:layout_constraintEnd_toEndOf="@id/rightBorder24dp"
             app:layout_constraintTop_toTopOf="@id/playButton" />
 
-        <androidx.constraintlayout.utils.widget.ImageFilterView
+        <ImageView
             android:id="@+id/add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

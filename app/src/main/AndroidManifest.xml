@@ -4,7 +4,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name="com.example.my.common.presentation.AppTheme"
+        android:name="com.example.playlistMaker.common.presentation.AppTheme"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:enableOnBackInvokedCallback="true"
@@ -15,7 +15,7 @@
         android:theme="@style/Theme.PlaylistMaker">
 
         <activity
-            android:name="com.example.my.common.presentation.ui.RootActivity"
+            android:name="com.example.playlistMaker.common.presentation.ui.RootActivity"
             android:windowSoftInputMode="adjustNothing|stateHidden"
             android:exported="true">
 

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/Theme.PlaylistMaker"
-    tools:context="com.example.my.common.presentation.ui.RootActivity">
+    tools:context="com.example.playlistMaker.common.presentation.ui.RootActivity">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment"

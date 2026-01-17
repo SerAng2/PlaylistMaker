@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:background="?attr/white_black"
     android:theme="@style/Theme.PlaylistMaker"
-    tools:context="com.example.my.setting.presentation.ui.SettingsFragment">
+    tools:context="com.example.playlistMaker.setting.presentation.ui.SettingsFragment">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/container"
