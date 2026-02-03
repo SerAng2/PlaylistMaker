@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/layout_60dp">
+
+    <ImageView
+        android:id="@+id/coverPlaylist"
+        android:layout_width="@dimen/layout_44dp"
+        android:layout_height="@dimen/layout_44dp"
+        android:layout_marginStart="@dimen/layout_12dp"
+        android:layout_marginVertical="@dimen/layout_8dp"/>
+
+    <TextView
+        android:id="@+id/namePlaylist"
+        style="@style/textStyle16"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_20dp"
+        android:layout_marginStart="@dimen/layout_66dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="@dimen/layout_44dp"
+        android:maxLines="1"
+        android:ellipsize="end" />
+
+    <TextView
+        android:id="@+id/quantityTracks"
+        style="@style/textStyle11"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_16dp"
+        android:layout_marginStart="@dimen/layout_66dp"
+        android:layout_marginTop="34dp"
+        android:layout_marginEnd="@dimen/layout_44dp"
+        android:maxLines="1"
+        android:ellipsize="end" />
+
+</FrameLayout>
