@@ -7,19 +7,26 @@
 
     <fragment
         android:id="@+id/mediaLibraryFragment"
-        android:name="com.example.my.mediaLibrary.presentation.ui.MediaLibraryFragment"
+        android:name="com.example.playlistMaker.mediaLibrary.presentation.ui.MediaLibraryFragment"
         android:label="MediaLibraryFragment"
-        tools:layout="@layout/fragment_media_library"/>
+        tools:layout="@layout/fragment_media_library">
+        <action
+            android:id="@+id/action_mediaLibraryFragment_to_playerFragment"
+            app:destination="@id/playerFragment" />
+    </fragment>
+
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.my.setting.presentation.ui.SettingsFragment"
+        android:name="com.example.playlistMaker.setting.presentation.ui.SettingsFragment"
         android:label="SettingsFragment"
         tools:layout="@layout/fragment_settings" />
+
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.example.my.search.presentation.ui.SearchFragment"
+        android:name="com.example.playlistMaker.search.presentation.ui.SearchFragment"
         android:label="SearchFragment"
         tools:layout="@layout/fragment_search">
+
         <action
             android:id="@+id/actionSearchToPlayer"
             app:destination="@id/playerFragment"
@@ -29,19 +36,19 @@
 
     <fragment
         android:id="@+id/playerFragment"
-        android:name="com.example.my.player.presentation.ui.PlayerFragment"
+        android:name="com.example.playlistMaker.player.presentation.ui.PlayerFragment"
         android:label="PlayerFragment"
         tools:layout="@layout/fragment_player">
 
         <argument
             android:name="track"
             android:defaultValue="@null"
-            app:argType="com.example.my.common.domain.model.Track" />
+            app:argType="com.example.playlistMaker.common.domain.model.Track" />
     </fragment>
 
     <activity
         android:id="@+id/rootActivity"
-        android:name="com.example.my.common.presentation.ui.RootActivity"
+        android:name="com.example.playlistMaker.common.presentation.ui.RootActivity"
         android:label="RootActivity"
         tools:layout="@layout/activity_root"/>
 
