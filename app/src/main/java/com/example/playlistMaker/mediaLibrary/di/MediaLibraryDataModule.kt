@@ -1,7 +1,7 @@
 package com.example.playlistMaker.mediaLibrary.di
 
 import androidx.room.Room
-import com.example.playlistMaker.mediaLibrary.data.FileManager
+import com.example.playlistMaker.mediaLibrary.data.repositoryImpl.FileManagerRepositoryImpl
 import com.example.playlistMaker.mediaLibrary.data.db.AppDatabase
 import com.example.playlistMaker.mediaLibrary.data.db.PlaylistDatabase
 import com.example.playlistMaker.mediaLibrary.data.db.PlaylistTrackDatabase
@@ -31,5 +31,5 @@ val mediaLibraryDataModule = module {
     }
     single { get<PlaylistTrackDatabase>().playlistTrackDao() }
 
-    single { FileManager(androidContext()) }
+
 }

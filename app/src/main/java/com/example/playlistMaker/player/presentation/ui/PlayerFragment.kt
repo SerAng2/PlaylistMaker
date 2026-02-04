@@ -35,9 +35,6 @@ class PlayerFragment : Fragment() {
     private val playlistViewModel: PlaylistsViewModel by viewModel()
     private var track: TrackViewState? = null
     private val adapter = PlaylistPlayerAdapter(emptyList()) { playlist ->
-        // Обработка клика по плейлисту
-
-        Log.d("PlayerFragment", "Clicked playlist: ")
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -99,7 +96,6 @@ class PlayerFragment : Fragment() {
         }
 
         binding.favourites.setOnClickListener {
-            Log.d("PlayerFragment", "Adding track with ID: ${track?.trackId}")
             viewModel.observeTrack.value?.let { currentTrack ->
                 viewModel.onFavoriteClicked(currentTrack)
             }
@@ -201,13 +197,9 @@ class PlayerFragment : Fragment() {
 
     private fun observePlaylists() {
         playlistViewModel.playlistObserver.observe(viewLifecycleOwner) { state ->
-            Log.d("PlayerFragment", "Playlist state changed: $state")
-
             when (state) {
                 is PlaylistState.Content -> {
-                    Log.d("PlayerFragment", "Updating adapter with ${state.playlists.size} playlists")
                     state.playlists.forEach { playlist ->
-                        Log.d("PlayerFragment", "Playlist: ${playlist.name}, trackCount: ${playlist.trackCount}, trackIds: ${playlist.trackIds}")
                     }
                     adapter.updatePlayerPlaylists(state.playlists)
                     binding.playlistsRecyclerView.visibility = View.VISIBLE

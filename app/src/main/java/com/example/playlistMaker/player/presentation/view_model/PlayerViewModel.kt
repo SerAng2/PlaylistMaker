@@ -47,10 +47,6 @@ class PlayerViewModel(
     private var timerJob: Job? = null
     private val dateFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
 
-    init {
-        loadPlaylists()
-    }
-
     fun onPause() {
         pausePlayer()
     }
@@ -129,7 +125,6 @@ class PlayerViewModel(
             val updatedTrack = track.copy(isFavorite = newIsFavorite)
             if (newIsFavorite) {
                 favoriteTrackInteractor.addTrackToFavorites(updatedTrack.toDomainTrack())
-                Log.d("FavoriteRepository", "Saving track: ${track.trackId}, isFavorite: ${track.isFavorite}")
             } else {
                 favoriteTrackInteractor.removeTrackFromFavorites(updatedTrack.toDomainTrack())
             }

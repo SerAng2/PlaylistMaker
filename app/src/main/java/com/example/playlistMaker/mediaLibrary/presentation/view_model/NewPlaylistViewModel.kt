@@ -2,7 +2,7 @@ package com.example.playlistMaker.mediaLibrary.presentation.view_model
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistMaker.mediaLibrary.domain.use_case.CreatePlaylistUseCase
+import com.example.playlistMaker.mediaLibrary.domain.use_case.CreatePlaylistUseCaseImpl
 import com.example.playlistMaker.mediaLibrary.presentation.state.NewPlaylistUiState
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class NewPlaylistViewModel(
-    private val createPlaylistUseCase: CreatePlaylistUseCase
+    private val createPlaylistUseCase: CreatePlaylistUseCaseImpl
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(NewPlaylistUiState())
@@ -22,7 +22,7 @@ class NewPlaylistViewModel(
     private val _navigationEvent = MutableSharedFlow<NavigationEvent>()
     val navigationEvent: SharedFlow<NavigationEvent> = _navigationEvent
 
-    private val _uiEvent = MutableSharedFlow<UiEvent>(replay = 1)
+    private val _uiEvent = MutableSharedFlow<UiEvent>(replay = 0)
     val uiEvent: SharedFlow<UiEvent> = _uiEvent
 
     fun onTitleChanged(title: String) {

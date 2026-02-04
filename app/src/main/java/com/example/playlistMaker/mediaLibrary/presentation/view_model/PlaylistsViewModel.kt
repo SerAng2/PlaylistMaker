@@ -29,12 +29,8 @@ class PlaylistsViewModel(
         viewModelScope.launch {
             try {
                 playlistInteractor.getAllPlaylists().collect { playlists ->
-                    Log.d("PlaylistsVM", "Received ${playlists.size} playlists from Flow")
                     playlists.forEach { playlist ->
-                        Log.d(
-                            "PlaylistsVM",
-                            "Playlist: ${playlist.name}, trackCount: ${playlist.trackCount}"
-                        )
+
                     }
 
                     if (playlists.isNotEmpty()) {
@@ -55,7 +51,6 @@ class PlaylistsViewModel(
                 }
             } catch (e: Exception) {
                 _playlistState.value = PlaylistState.Empty
-                Log.e("PlaylistsViewModel", "Error loading playlists", e)
             }
         }
     }

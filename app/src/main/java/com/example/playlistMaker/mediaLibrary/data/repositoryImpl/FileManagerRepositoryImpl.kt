@@ -1,15 +1,15 @@
-package com.example.playlistMaker.mediaLibrary.data
+package com.example.playlistMaker.mediaLibrary.data.repositoryImpl
 
 import android.content.Context
+import com.example.playlistMaker.mediaLibrary.domain.repository.FileManagerRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 
-class FileManager(
+class FileManagerRepositoryImpl(
     private val context: Context
-) {
-
-    suspend fun copyImageToInternalStorage(sourcePath: String, directoryName: String): String? {
+) : FileManagerRepository{
+   override suspend fun copyImageToInternalStorage(sourcePath: String, directoryName: String): String? {
         return withContext(Dispatchers.IO) {
             try {
                 val sourceFile = File(sourcePath)

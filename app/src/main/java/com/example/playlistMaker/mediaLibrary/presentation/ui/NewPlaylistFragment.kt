@@ -13,7 +13,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.addCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.addTextChangedListener
@@ -66,11 +65,6 @@ class NewPlaylistFragment : Fragment() {
         subscribeToUiEvents()
         setupBackCallback()
 
-
-
-        // ✅ 3. Проверьте, что ViewModel инициализирован
-        Log.d("NewPlaylistFragment", "ViewModel: ${viewModel.hashCode()}")
-
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collect { state ->
                 binding.bottom.isEnabled = state.isCreateButtonEnabled
@@ -85,7 +79,6 @@ class NewPlaylistFragment : Fragment() {
             }
         }
     }
-
 
     private fun setupObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
@@ -113,13 +106,10 @@ class NewPlaylistFragment : Fragment() {
             ActivityResultContracts.PickVisualMedia()
         ) { uri ->
             if (uri != null) {
-                // ✅ Переключаем на фото с растягиванием
-
                 val savedPath = saveImageToPrivateStorage(uri)
                 showPhoto(uri)
                 viewModel.onCoverPathChanged(savedPath)
             } else {
-                // ✅ Возвращаем к иконке (если отменили выбор)
                 if (!isShowingIcon) {
                     viewModel.onCoverPathChanged(null)
                 }
@@ -143,18 +133,17 @@ class NewPlaylistFragment : Fragment() {
         }
 
         binding.backPlaylist.setOnClickListener {
-            // Прямой вызов той же логики, что и в OnBackPressedCallback
             val state = viewModel.uiState.value
             if (state.hasChanges) {
                 showExitConfirmationDialog()
             } else {
-                findNavController().popBackStack() // или viewModel.onBackClicked(), если он делает popBackStack
+                findNavController().popBackStack()
             }
         }
         }
 
     private fun Context.cornerRadius() = DisplayPx.dpToPx(8f, this)
-    // ✅ ПОКАЗАТЬ ФОТО (растягиваем)
+
     private fun showPhoto(uri: Uri) {
 
         val coverImageView = binding.addImage
@@ -234,12 +223,12 @@ class NewPlaylistFragment : Fragment() {
     }
 
     private fun subscribeToUiEvents() {
-        // ✅ ПОДПИСЫВАЕМСЯ НА UiEvent — ИСПОЛЬЗУЕМ lifecycleScope
+
         viewLifecycleOwner.lifecycleScope.launchWhenResumed {
             viewModel.uiEvent.collect { event ->
                 when (event) {
                     is UiEvent.ShowToast -> {
-                        // ✅ ТУТ ЕСТЬ КОНТЕКСТ — ИДЕАЛЬНОЕ МЕСТО!
+
                         Toast.makeText(
                             requireContext(),
                             event.message,
@@ -250,10 +239,10 @@ class NewPlaylistFragment : Fragment() {
             }
         }
     }
-    // ✅ Перехват системной кнопки "Назад"
+
     private fun setupBackCallback() {
         requireActivity().onBackPressedDispatcher.addCallback(this,
-            object : OnBackPressedCallback(true) { // viewLifecycleOwner!!!
+            object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     Log.e("NewPlaylistFragment", "🔥 BACK BUTTON PRESSED — WORKING NOW!")
                     val state = viewModel.uiState.value
@@ -280,7 +269,7 @@ class NewPlaylistFragment : Fragment() {
             .setPositiveButton("Завершить") { dialog, _ ->
                 dialog.dismiss()
                 isExitDialogShowing = false
-                viewModel.onBackClicked() // ✅ ЗАКРЫВАЕМ ЭКРАН
+                viewModel.onBackClicked()
             }
             .show()
     }

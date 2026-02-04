@@ -1,7 +1,6 @@
 package com.example.playlistMaker.player.presentation.utils
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -39,16 +38,10 @@ class PlaylistPlayerAdapter (
             RecyclerView.ViewHolder(binding.root) {
 
             fun bind(playlist: PlaylistViewState) {
-                Log.d("PlaylistAdapter", "Binding playlist: ${playlist.name}, tracks: ${playlist.trackCount}")
                 binding.apply {
-                    // Устанавливаем название плейлиста
                     namePlaylist.text = playlist.name
-
-                    // Форматируем количество треков
                     quantityTracks.text = formatTrackCount(playlist.trackCount, binding.root.context)
                 }
-
-                // Загружаем обложку плейлиста
                 loadPlaylistCover(playlist)
             }
 
@@ -67,7 +60,6 @@ class PlaylistPlayerAdapter (
                         .transform(RoundedCorners(cornerRadius))
                         .into(binding.coverPlaylist)
                 } else {
-                    // Если нет обложки, показываем заглушку
                     binding.coverPlaylist.setImageResource(R.drawable.cover_cap)
                 }
             }
