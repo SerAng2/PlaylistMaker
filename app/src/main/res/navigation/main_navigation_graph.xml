@@ -13,6 +13,12 @@
         <action
             android:id="@+id/action_mediaLibraryFragment_to_playerFragment"
             app:destination="@id/playerFragment" />
+        <action
+            android:id="@+id/action_mediaLibraryFragment_to_newPlaylistFragment"
+            app:destination="@id/newPlaylistFragment" />
+        <action
+            android:id="@+id/action_mediaLibraryFragment_to_itemFragment"
+            app:destination="@id/itemFragment" />
     </fragment>
 
     <fragment
@@ -44,6 +50,12 @@
             android:name="track"
             android:defaultValue="@null"
             app:argType="com.example.playlistMaker.common.domain.model.Track" />
+        <action
+            android:id="@+id/action_playerFragment_to_newPlaylistFragment"
+            app:destination="@id/newPlaylistFragment" />
+        <action
+            android:id="@+id/action_playerFragment_to_itemFragment"
+            app:destination="@id/itemFragment" />
     </fragment>
 
     <activity
@@ -51,5 +63,15 @@
         android:name="com.example.playlistMaker.common.presentation.ui.RootActivity"
         android:label="RootActivity"
         tools:layout="@layout/activity_root"/>
+    <fragment
+        android:id="@+id/newPlaylistFragment"
+        android:name="com.example.playlistMaker.mediaLibrary.presentation.ui.NewPlaylistFragment"
+        android:label="fragment_new_playlist2"
+        tools:layout="@layout/fragment_new_playlist" />
+    <fragment
+        android:id="@+id/itemFragment"
+        android:name="com.example.playlistMaker.mediaLibrary.presentation.ui.ItemPlaylistFragment"
+        android:label="fragment_item_list"
+        tools:layout="@layout/fragment_playlist_item" />
 
 </navigation>

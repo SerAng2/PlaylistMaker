@@ -9,31 +9,40 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistMaker.common.domain.model.Track
 import com.example.playlistMaker.mediaLibrary.domain.interactor.FavoriteTrackInteractor
+import com.example.playlistMaker.mediaLibrary.domain.interactor.PlaylistInteractor
+import com.example.playlistMaker.mediaLibrary.domain.model.Playlist
 import com.example.playlistMaker.player.presentation.mapper.toDomainTrack
 import com.example.playlistMaker.player.presentation.state.PlayerState
 import com.example.playlistMaker.player.presentation.state.TrackViewState
 import com.example.playlistMaker.player.presentation.utils.formatToMMSS
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class PlayerViewModel(
     private val mediaPlayer: MediaPlayer,
-    private val favoriteTrackInteractor: FavoriteTrackInteractor
+    private val favoriteTrackInteractor: FavoriteTrackInteractor,
+    private val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
 
     private val trackStateLiveData = MutableLiveData<TrackViewState?>()
     val observeTrack: LiveData<TrackViewState?> get() = trackStateLiveData
 
-    val playerState = MutableLiveData<PlayerState>(PlayerState.Default())
+    private val playerState = MutableLiveData<PlayerState>(PlayerState.Default())
     fun observePlayerState(): LiveData<PlayerState> = playerState
 
     private val _isFavorite = MutableLiveData<Boolean>()
     val isFavorite: LiveData<Boolean> = _isFavorite
 
-    private var currentTrack: TrackViewState? = null
+    private val _addTrackStatus = MutableLiveData<String>()
+    val addTrackStatus: LiveData<String> get() = _addTrackStatus
+
+    private val _playlists = MutableLiveData<List<Playlist>>()
+    val playlists: LiveData<List<Playlist>> = _playlists
+
     private var track: Track? = null
     private var timerJob: Job? = null
     private val dateFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
@@ -47,11 +56,9 @@ class PlayerViewModel(
             is PlayerState.Playing -> {
                 pausePlayer()
             }
-
             is PlayerState.Prepared, is PlayerState.Paused -> {
                 startPlayer()
             }
-
             else -> {}
         }
     }
@@ -103,12 +110,9 @@ class PlayerViewModel(
         track?.let {
             this.track = track?.toTrack()
             trackStateLiveData.value = track
-            // ✅ ПРАВИЛЬНО: ПРОВЕРЯЕМ СОСТОЯНИЕ В БД, НЕ ДОВЕРЯЕМ track.isFavorite
             viewModelScope.launch {
                 val isFav = favoriteTrackInteractor.isTrackFavorite(track.trackId)
                 _isFavorite.value = isFav
-
-                // ✅ ОБНОВЛЯЕМ track в UI, чтобы он отражал реальное состояние
                 trackStateLiveData.value = track.copy(isFavorite = isFav)
                 preparePlayer()
             }
@@ -121,15 +125,43 @@ class PlayerViewModel(
             val updatedTrack = track.copy(isFavorite = newIsFavorite)
             if (newIsFavorite) {
                 favoriteTrackInteractor.addTrackToFavorites(updatedTrack.toDomainTrack())
-                Log.d("FavoriteRepository", "Saving track: ${track.trackId}, isFavorite: ${track.isFavorite}")
             } else {
                 favoriteTrackInteractor.removeTrackFromFavorites(updatedTrack.toDomainTrack())
             }
-
-            // Обновляем состояние в UI
             _isFavorite.value = newIsFavorite
-            // Обновляем данные в треке, чтобы он сохранил новое состояние
             trackStateLiveData.value = updatedTrack
+        }
+    }
+
+    private fun loadPlaylists() {
+        viewModelScope.launch {
+            try {
+                val list = playlistInteractor.getAllPlaylists().first()
+                _playlists.value = list
+            } catch (e: Exception) {
+                Log.e("PlayerViewModel", "Error loading playlists", e)
+            }
+        }
+    }
+
+    fun addTrackToPlaylist(playlistId: Long, trackId: Long?) {
+        viewModelScope.launch {
+            try {
+                val exists = playlistInteractor.isTrackInPlaylist(playlistId, trackId)
+                if (exists) {
+                    _addTrackStatus.value = "Трек уже в плейлисте"
+                } else {
+                    // ✅ ВАЖНО: Добавляем трек
+                    playlistInteractor.addTrackToPlaylist(playlistId, trackId)
+
+                    _addTrackStatus.value = "Трек добавлен в плейлист"
+                    Log.e("PlaylistInteractor", "Saving track: ${track?.trackId}, playlist: ${playlistId}")
+                    loadPlaylists()
+                    playlistInteractor.refreshPlaylists()
+                 }
+            } catch (e: Exception) {
+                _addTrackStatus.value = "Ошибка: трек не найден"
+            }
         }
     }
 
