@@ -2,9 +2,9 @@ package com.example.playlistMaker.common.presentation
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistMaker.mediaLibrary.di.dataModule
+import com.example.playlistMaker.mediaLibrary.di.mediaLibraryDataModule
+import com.example.playlistMaker.mediaLibrary.di.mediaLibraryDomainModule
 import com.example.playlistMaker.mediaLibrary.di.mediaLibraryViewModelModule
-import com.example.playlistMaker.mediaLibrary.di.repositoryModule
 import com.example.playlistMaker.player.di.playerModule
 import com.example.playlistMaker.search.di.historyRepositoryModule
 import com.example.playlistMaker.search.di.performSearchModule
@@ -35,10 +35,11 @@ class AppTheme() : Application() {
                 performSearchModule,
                 searchViewModelModule,
                 switchThemeModule,
-                dataModule,
-                repositoryModule,
-                playerModule,
-                mediaLibraryViewModelModule
+                mediaLibraryDataModule,
+                mediaLibraryDomainModule,
+                mediaLibraryViewModelModule,
+                playerModule
+
             )
         }
 

@@ -1,6 +1,5 @@
 package com.example.playlistMaker.mediaLibrary.presentation.view_model
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -23,7 +22,6 @@ class FavoriteTracksViewModel(
     private fun loadFavoriteTracks() {
         viewModelScope.launch {
             favoriteTrackInteractor.getFavoriteTracks().collect { tracks ->
-                Log.d("FavoriteTracksVM", "Loaded ${tracks.size} favorite tracks")
                 favoritesState.value = if (tracks.isEmpty()) {
                     FavoritesState.Empty
                 } else {

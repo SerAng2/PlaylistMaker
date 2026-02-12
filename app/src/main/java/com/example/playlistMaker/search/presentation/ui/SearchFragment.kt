@@ -20,6 +20,7 @@ import com.example.playlistMaker.player.presentation.state.TrackViewState
 import com.example.playlistMaker.search.presentation.state.TracksState
 import com.example.playlistMaker.search.presentation.view_model.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlin.collections.emptyList
 
 class SearchFragment : Fragment() {
 

@@ -9,4 +9,6 @@
     <color name="YP_Text_Gray"> #AEAFB4</color>
     <color name="YP_Icon_Gray"> #1A1B2240</color>
     <color name="YP_Red"> #F56B6C</color>
+    <color name="bottom_sheet_overlay_background"> #CC000000</color>
+
 </resources>

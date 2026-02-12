@@ -6,7 +6,7 @@ import com.example.playlistMaker.mediaLibrary.data.db.AppDatabase
 import com.example.playlistMaker.search.data.repositoryImpl.PerformSearchRepositoryImpl
 import com.example.playlistMaker.search.domain.repository.PerformSearchRepository
 import com.example.playlistMaker.search.domain.use_case.PerformSearchUseCase
-import com.example.playlistMaker.search.domain.use_case.impl.PerformSearchUseCaseImpl
+import com.example.playlistMaker.search.domain.use_case.PerformSearchUseCaseImpl
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 

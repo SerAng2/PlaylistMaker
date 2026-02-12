@@ -31,4 +31,9 @@
     <string name="new_playlists">Новый плейлист</string>
     <string name="playlists_not_created">Вы не создали\nни одного плейлиста</string>
     <string name="media_empty">Ваша медиатека пуста</string>
+    <string name="tracks">%d треков</string>
+    <string name="description">Описание</string>
+    <string name="title">Название*</string>
+    <string name="create">Создать</string>
+
 </resources>

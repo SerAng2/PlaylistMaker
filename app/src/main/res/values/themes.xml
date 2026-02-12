@@ -2,8 +2,6 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
 
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
     <style name="SettingsActivity" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -17,7 +15,7 @@
         <item name="mainTheme">@color/YP_blue</item>
         <item name="white_black">@color/YP_white</item>
         <item name="black_white">@color/YP_black</item>
-        <item name="white_gray">@color/YP_Text_Gray</item>
+        <item name="white_gray">@color/YP_white</item>
         <item name="gray_black">@color/YP_Text_Gray</item>
         <item name="gray_white">@color/YP_Text_Gray</item>
         <item name="gray_red">@color/YP_Text_Gray</item>

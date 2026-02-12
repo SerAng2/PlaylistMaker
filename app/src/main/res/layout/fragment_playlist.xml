@@ -15,10 +15,20 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/layout_24dp"
         android:text="@string/new_playlists"
-        app:layout_constraintBottom_toTopOf="@id/noMusicIV"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/playlistsRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/layout_16dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/newPlaylistButton"/>
 
     <ImageView
         android:id="@+id/noMusicIV"
@@ -26,10 +36,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="46dp"
         android:src="@drawable/ic_no_music"
+        app:layout_constraintTop_toBottomOf="@+id/newPlaylistButton"
         app:layout_constraintBottom_toTopOf="@id/playlistsNotCreatedTV"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newPlaylistButton" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/playlistsNotCreatedTV"
@@ -37,10 +47,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/layout_16dp"
+        android:layout_marginBottom="400dp"
         android:text="@string/playlists_not_created"
+        app:layout_constraintTop_toBottomOf="@+id/noMusicIV"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/noMusicIV" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
