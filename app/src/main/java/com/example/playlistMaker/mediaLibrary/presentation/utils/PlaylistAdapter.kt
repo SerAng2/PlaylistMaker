@@ -1,6 +1,5 @@
-package com.example.playlistMaker.common.presentation
+package com.example.playlistMaker.mediaLibrary.presentation.utils
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -47,10 +46,6 @@ class PlaylistAdapter(
                 // Загружаем обложку плейлиста
                 loadPlaylistCover(playlist)
             }
-        }
-
-        private fun formatTrackCount(trackCount: Int, context: Context): String {
-            return context.getString(R.string.tracks, trackCount)
         }
 
         private fun loadPlaylistCover(playlist: PlaylistViewState) {

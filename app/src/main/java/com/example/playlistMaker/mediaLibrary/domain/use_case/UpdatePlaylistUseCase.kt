@@ -1,9 +1,10 @@
 package com.example.playlistMaker.mediaLibrary.domain.use_case
 
-interface CreatePlaylistUseCase {
+interface UpdatePlaylistUseCase {
     suspend operator fun invoke(
-        title: String,
-        description: String,
+        id: Long,
+        name: String,
+        description: String?,
         coverPath: String?
-    ): Result<Long>
+    )
 }

@@ -24,15 +24,10 @@ class PlaylistsViewModel(
         _selectedTrackId.value = trackId
     }
 
-
     fun loadPlaylist() {
         viewModelScope.launch {
             try {
                 playlistInteractor.getAllPlaylists().collect { playlists ->
-                    playlists.forEach { playlist ->
-
-                    }
-
                     if (playlists.isNotEmpty()) {
                         val viewStates = playlists.map { playlist ->
                             PlaylistViewState(
@@ -40,8 +35,7 @@ class PlaylistsViewModel(
                                 name = playlist.name,
                                 description = playlist.description,
                                 coverPath = playlist.coverPath,
-                                trackCount = playlist.trackCount,
-                                trackIds = playlist.trackIds
+                                trackCount = playlist.trackCount
                             )
                         }
                         _playlistState.value = PlaylistState.Content(viewStates)

@@ -11,12 +11,15 @@ import com.example.playlistMaker.common.domain.model.Track
 import com.example.playlistMaker.mediaLibrary.domain.interactor.FavoriteTrackInteractor
 import com.example.playlistMaker.mediaLibrary.domain.interactor.PlaylistInteractor
 import com.example.playlistMaker.mediaLibrary.domain.model.Playlist
+import com.example.playlistMaker.mediaLibrary.presentation.view_model.PlaylistUiState
 import com.example.playlistMaker.player.presentation.mapper.toDomainTrack
 import com.example.playlistMaker.player.presentation.state.PlayerState
 import com.example.playlistMaker.player.presentation.state.TrackViewState
 import com.example.playlistMaker.player.presentation.utils.formatToMMSS
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -25,7 +28,7 @@ import java.util.Locale
 class PlayerViewModel(
     private val mediaPlayer: MediaPlayer,
     private val favoriteTrackInteractor: FavoriteTrackInteractor,
-    private val playlistInteractor: PlaylistInteractor
+    private val playlistRepository: PlaylistInteractor
 ) : ViewModel() {
 
     private val trackStateLiveData = MutableLiveData<TrackViewState?>()
@@ -43,7 +46,10 @@ class PlayerViewModel(
     private val _playlists = MutableLiveData<List<Playlist>>()
     val playlists: LiveData<List<Playlist>> = _playlists
 
-    private var track: Track? = null
+    private val _uiState = MutableStateFlow<PlaylistUiState>(PlaylistUiState.Idle)
+    val uiState = _uiState.asStateFlow()
+
+    private var tracks: Track? = null
     private var timerJob: Job? = null
     private val dateFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
 
@@ -65,7 +71,7 @@ class PlayerViewModel(
 
     @SuppressLint("SuspiciousIndentation")
     private fun preparePlayer() {
-        val previewUrl = track?.previewUrl
+        val previewUrl = tracks?.previewUrl
         mediaPlayer.setDataSource(previewUrl)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
@@ -108,7 +114,7 @@ class PlayerViewModel(
 
     fun loadTrackInfo(track: TrackViewState?) {
         track?.let {
-            this.track = track?.toTrack()
+            this.tracks = track?.toTrack()
             trackStateLiveData.value = track
             viewModelScope.launch {
                 val isFav = favoriteTrackInteractor.isTrackFavorite(track.trackId)
@@ -136,7 +142,7 @@ class PlayerViewModel(
     private fun loadPlaylists() {
         viewModelScope.launch {
             try {
-                val list = playlistInteractor.getAllPlaylists().first()
+                val list = playlistRepository.getAllPlaylists().first()
                 _playlists.value = list
             } catch (e: Exception) {
                 Log.e("PlayerViewModel", "Error loading playlists", e)
@@ -144,26 +150,42 @@ class PlayerViewModel(
         }
     }
 
-    fun addTrackToPlaylist(playlistId: Long, trackId: Long?) {
+    // Добавление трека в плейлист
+    fun addTrackToPlaylist(playlistId: Long, trackViewState: TrackViewState) {
         viewModelScope.launch {
             try {
-                val exists = playlistInteractor.isTrackInPlaylist(playlistId, trackId)
-                if (exists) {
-                    _addTrackStatus.value = "Трек уже в плейлисте"
-                } else {
-                    // ✅ ВАЖНО: Добавляем трек
-                    playlistInteractor.addTrackToPlaylist(playlistId, trackId)
-
-                    _addTrackStatus.value = "Трек добавлен в плейлист"
-                    Log.e("PlaylistInteractor", "Saving track: ${track?.trackId}, playlist: ${playlistId}")
-                    loadPlaylists()
-                    playlistInteractor.refreshPlaylists()
-                 }
+                // Преобразуем TrackViewState в доменный Track
+                val track = trackViewState.toDomainTrack()
+                playlistRepository.addTrackToPlaylist(playlistId, track)
+                _uiState.value = PlaylistUiState.Success("Трек добавлен в плейлист")
             } catch (e: Exception) {
-                _addTrackStatus.value = "Ошибка: трек не найден"
+                _uiState.value = PlaylistUiState.Error("Ошибка добавления трека: ${e.message}")
             }
         }
     }
+
+//    fun addTrackToPlaylist(playlistId: Long) {
+//        val currentTrack = tracks ?: return
+//        val trackId = currentTrack.trackId
+//
+//        viewModelScope.launch {
+//            try {
+//                val exists = playlistInteractor.isTrackInPlaylist(playlistId, trackId)
+//                if (exists) {
+//                    _addTrackStatus.value = "Трек уже в плейлисте"
+//                } else {
+//                    playlistInteractor.addTrackToPlaylist(playlistId, trackId)
+//                    _addTrackStatus.value = "Трек добавлен в плейлист"
+//                    Log.d("PlayerViewModel", "✅ Track added: $trackId → playlist $playlistId")
+//                    loadPlaylists()
+//                    playlistInteractor.refreshPlaylists()
+//                }
+//            } catch (e: Exception) {
+//                _addTrackStatus.value = "Ошибка: трек не найден"
+//                Log.e("PlayerViewModel", "Failed to add track", e)
+//            }
+//        }
+//    }
 
     fun TrackViewState.toTrack(): Track {
         return Track(

@@ -12,7 +12,8 @@ import com.example.playlistMaker.player.presentation.utils.DisplayPx
 
 class TrackAdapter(
     private var tracks: List<TrackViewState>,
-    private val onTrackClick: (track: TrackViewState) -> Unit
+    private val onTrackClick: (track: TrackViewState) -> Unit,
+    var onTrackLongClick: ((TrackViewState) -> Unit)? = null
 ) :
     RecyclerView.Adapter<TrackAdapter.TrackViewHolder>() {
 
@@ -34,14 +35,12 @@ class TrackAdapter(
 
     override fun getItemCount(): Int = tracks.size
 
-    open class TrackViewHolder(private val binding: ItemTrackBinding) :
+    inner class TrackViewHolder(private val binding: ItemTrackBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(track: TrackViewState) {
-            binding.apply {
-                trackName.text = track.trackName
-                artistName.text = track.artistName
-                trackTime.text = track.trackTime
-            }
+        fun bind(track: TrackViewState) = binding.apply {
+            trackName.text = track.trackName
+            artistName.text = track.artistName
+            trackTime.text = track.trackTime
 
             val cornerRadius = DisplayPx.dpToPx(8f, binding.root.context)
 
@@ -51,6 +50,10 @@ class TrackAdapter(
                 .centerCrop()
                 .transform(RoundedCorners(cornerRadius))
                 .into(binding.artwork)
+
+            root.setOnClickListener { onTrackClick(track) }
+            root.setOnLongClickListener { onTrackLongClick?.invoke(track); true }
+
         }
     }
 }

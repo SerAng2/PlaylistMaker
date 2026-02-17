@@ -34,7 +34,7 @@ class PlayerFragment : Fragment() {
     private val viewModel: PlayerViewModel by viewModel()
     private val playlistViewModel: PlaylistsViewModel by viewModel()
     private var track: TrackViewState? = null
-    private val adapter = PlaylistPlayerAdapter(emptyList()) { playlist ->
+    private val adapter = PlaylistPlayerAdapter(emptyList()) {
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -65,14 +65,14 @@ class PlayerFragment : Fragment() {
             val trackId = track?.trackId
             if (trackId != null) {
                 playlistViewModel.selectTrack(trackId)
-                viewModel.addTrackToPlaylist(playlist.id, trackId)
-
+                viewModel.addTrackToPlaylist(
+                    playlist.id,
+                    trackViewState = track!!
+                )
                 val bottomSheetBehavior = BottomSheetBehavior.from(binding.standardBottomSheet)
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             }
         }
-
-
 
         track = arguments?.getParcelable(
             TRACK_DATA,
