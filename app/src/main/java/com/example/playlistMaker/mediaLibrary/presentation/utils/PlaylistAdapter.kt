@@ -12,7 +12,7 @@ import com.example.playlistMaker.player.presentation.utils.DisplayPx
 
 class PlaylistAdapter(
     private var playlists: List<PlaylistViewState>,
-    var onPlaylistClick: (playlist: PlaylistViewState) -> Unit
+    var onPlaylistClick: (playlist: PlaylistViewState) -> Unit,
 ) : RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder>() {
 
     fun updatePlaylists(newPlaylists: List<PlaylistViewState>) {

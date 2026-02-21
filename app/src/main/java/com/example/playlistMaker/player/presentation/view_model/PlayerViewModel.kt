@@ -28,7 +28,7 @@ import java.util.Locale
 class PlayerViewModel(
     private val mediaPlayer: MediaPlayer,
     private val favoriteTrackInteractor: FavoriteTrackInteractor,
-    private val playlistRepository: PlaylistInteractor
+    private val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
 
     private val trackStateLiveData = MutableLiveData<TrackViewState?>()
@@ -142,7 +142,7 @@ class PlayerViewModel(
     private fun loadPlaylists() {
         viewModelScope.launch {
             try {
-                val list = playlistRepository.getAllPlaylists().first()
+                val list = playlistInteractor.getAllPlaylists().first()
                 _playlists.value = list
             } catch (e: Exception) {
                 Log.e("PlayerViewModel", "Error loading playlists", e)
@@ -152,40 +152,20 @@ class PlayerViewModel(
 
     // Добавление трека в плейлист
     fun addTrackToPlaylist(playlistId: Long, trackViewState: TrackViewState) {
+        val trackId = trackViewState.trackId
         viewModelScope.launch {
-            try {
-                // Преобразуем TrackViewState в доменный Track
-                val track = trackViewState.toDomainTrack()
-                playlistRepository.addTrackToPlaylist(playlistId, track)
-                _uiState.value = PlaylistUiState.Success("Трек добавлен в плейлист")
-            } catch (e: Exception) {
-                _uiState.value = PlaylistUiState.Error("Ошибка добавления трека: ${e.message}")
+
+                val exists = playlistInteractor.isTrackInPlaylist(playlistId, trackId)
+                if (exists) {
+                    _addTrackStatus.value = "Трек уже в плейлисте"
+                } else {
+                    val track = trackViewState.toDomainTrack()
+                    playlistInteractor.addTrackToPlaylist(playlistId, track)
+                    _addTrackStatus.value = "Трек добавлен в плейлист"
+                    Log.d("PlayerViewModel", "✅ Track added: $trackId → playlist $playlistId")
+                }
             }
         }
-    }
-
-//    fun addTrackToPlaylist(playlistId: Long) {
-//        val currentTrack = tracks ?: return
-//        val trackId = currentTrack.trackId
-//
-//        viewModelScope.launch {
-//            try {
-//                val exists = playlistInteractor.isTrackInPlaylist(playlistId, trackId)
-//                if (exists) {
-//                    _addTrackStatus.value = "Трек уже в плейлисте"
-//                } else {
-//                    playlistInteractor.addTrackToPlaylist(playlistId, trackId)
-//                    _addTrackStatus.value = "Трек добавлен в плейлист"
-//                    Log.d("PlayerViewModel", "✅ Track added: $trackId → playlist $playlistId")
-//                    loadPlaylists()
-//                    playlistInteractor.refreshPlaylists()
-//                }
-//            } catch (e: Exception) {
-//                _addTrackStatus.value = "Ошибка: трек не найден"
-//                Log.e("PlayerViewModel", "Failed to add track", e)
-//            }
-//        }
-//    }
 
     fun TrackViewState.toTrack(): Track {
         return Track(

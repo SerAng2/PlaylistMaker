@@ -8,9 +8,9 @@ interface PlaylistRepository {
     suspend fun createPlaylist(name: String, description: String, coverPath: String?): Long
     fun getAllPlaylists(): Flow<List<Playlist>>
     suspend fun addTrackToPlaylist(playlistId: Long, track: Track)
-    suspend fun getPlaylistTracks(playlistId: Long): List<Track>
+    fun getPlaylistTracks(playlistId: Long): Flow<List<Track>>
     suspend fun isTrackInPlaylist(playlistId: Long, trackId: Long): Boolean
-    suspend fun removeTrackFromPlaylist(playlistId: Long, trackId: Long): List<Track>
+    suspend fun removeTrackFromPlaylist(playlistId: Long, trackId: Long)
     fun getPlaylistById(playlistId: Long): Flow<Playlist?>
     suspend fun getPlaylistByIdOnce(id: Long): Playlist
     suspend fun updatePlaylist(id: Long, name: String, description: String?, coverPath: String?)

@@ -3,43 +3,51 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/YP_lightGray">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/q"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/YP_lightGray">
+        app:layout_constraintBottom_toTopOf="@id/tracksBottomSheet">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/imageColor"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/layout_24dp"
             android:background="@color/YP_white"
+            app:layout_constraintBottom_toTopOf="@id/namePlaylist"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="NotSibling">
 
             <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/leftBorder24dp"
+                android:id="@+id/leftBorder40dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_begin="@dimen/layout_24dp" />
+                app:layout_constraintGuide_begin="40dp" />
 
             <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/rightBorder24dp"
+                android:id="@+id/rightBorder40dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_end="@dimen/layout_24dp" />
+                app:layout_constraintGuide_end="40dp" />
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/imageColor"
+                app:layout_constraintVertical_bias="0.0"
                 app:navigationIcon="@drawable/ic_back"
                 app:navigationIconTint="@color/YP_black" />
 
@@ -47,13 +55,13 @@
                 android:id="@+id/coverPlaylist"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginBottom="@dimen/layout_24dp"
-                android:scaleType="centerCrop"
+                android:layout_marginVertical="40dp"
+                android:scaleType="centerInside"
                 app:layout_constraintBottom_toBottomOf="@id/imageColor"
                 app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintEnd_toEndOf="@id/rightBorder24dp"
-                app:layout_constraintStart_toStartOf="@id/leftBorder24dp"
-                app:layout_constraintTop_toBottomOf="@id/toolbar"
+                app:layout_constraintEnd_toEndOf="@id/rightBorder40dp"
+                app:layout_constraintStart_toStartOf="@id/leftBorder40dp"
+                app:layout_constraintTop_toTopOf="@id/toolbar"
                 tools:ignore="ContentDescription" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -73,9 +81,11 @@
 
         <TextView
             android:id="@+id/namePlaylist"
+            style="@style/textStyle24"
             android:layout_width="0dp"
             android:layout_height="@dimen/layout_28dp"
-            android:layout_marginTop="@dimen/layout_24dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             app:layout_constraintBottom_toTopOf="@id/descriptionPlaylist"
             app:layout_constraintEnd_toEndOf="@id/rightBorder16dp"
             app:layout_constraintStart_toStartOf="@id/leftBorder16dp"
@@ -83,9 +93,12 @@
 
         <TextView
             android:id="@+id/descriptionPlaylist"
+            style="@style/textStyle18"
             android:layout_width="0dp"
-            android:layout_height="22dp"
+            android:layout_height="20dp"
             android:layout_marginTop="@dimen/layout_8dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             app:layout_constraintBottom_toTopOf="@id/quantityAndLength"
             app:layout_constraintEnd_toEndOf="@id/rightBorder16dp"
             app:layout_constraintStart_toStartOf="@id/leftBorder16dp"
@@ -94,9 +107,8 @@
         <LinearLayout
             android:id="@+id/quantityAndLength"
             android:layout_width="0dp"
-            android:layout_height="22dp"
+            android:layout_height="20dp"
             android:layout_marginTop="@dimen/layout_8dp"
-            android:orientation="horizontal"
             app:layout_constraintBottom_toTopOf="@id/functions"
             app:layout_constraintEnd_toEndOf="@id/rightBorder16dp"
             app:layout_constraintStart_toStartOf="@id/leftBorder16dp"
@@ -104,7 +116,7 @@
 
             <TextView
                 android:id="@+id/trackTime"
-                style="@style/textStyle11"
+                style="@style/textStyle18"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent" />
 
@@ -112,13 +124,13 @@
                 android:id="@+id/icon"
                 android:layout_width="@dimen/layout_16dp"
                 android:layout_height="@dimen/layout_16dp"
-                android:layout_gravity="center_horizontal"
-                android:src="@drawable/ic_point"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_point_black"
                 tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/trackCount"
-                style="@style/textStyle11"
+                style="@style/textStyle18"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="@string/tracks" />
@@ -129,9 +141,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/layout_16dp"
-            android:layout_marginBottom="290dp"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="@id/rightBorder16dp"
             app:layout_constraintStart_toStartOf="@id/leftBorder16dp"
             app:layout_constraintTop_toBottomOf="@id/quantityAndLength">
@@ -162,15 +173,15 @@
         android:visibility="gone" />
 
     <LinearLayout
-        android:id="@+id/standardBottomSheet"
+        android:id="@+id/tracksBottomSheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/layout_24dp"
         android:background="@drawable/rounded_botton_sheet"
         android:orientation="vertical"
-        app:behavior_hideable="true"
-        app:behavior_peekHeight="300dp"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="240dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        app:layout_constraintTop_toBottomOf="@id/functions">
 
         <View
             android:layout_width="50dp"
@@ -179,8 +190,19 @@
             android:layout_marginTop="8dp"
             android:background="@color/YP_lightGray" />
 
+        <TextView
+            android:id="@+id/noTracks"
+            style="@style/textStyle19_option1"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/layout_30dp"
+            android:text="@string/noTrack" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/tracksRecyclerView"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/layout_12dp" />

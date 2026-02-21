@@ -15,10 +15,12 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -46,7 +48,9 @@ class NewPlaylistFragment : Fragment() {
     private var isShowingIcon = true
     private var isExitDialogShowing = false
     private var currentImageUri: Uri? = null
+    private val args: NewPlaylistFragmentArgs by navArgs()
     private val viewModel: NewPlaylistViewModel by viewModel()
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,6 +68,50 @@ class NewPlaylistFragment : Fragment() {
         setupObservers()
         subscribeToUiEvents()
         setupBackCallback()
+
+        val playlistId = args.playlistId
+        Log.d("NewPlaylist", "playlistId = $playlistId")
+
+        if (playlistId != -1L) {
+            viewModel.loadPlaylistForEdit(playlistId)
+            binding.bottom.text = "Сохранить"
+        } else {
+            binding.bottom.text = "Создать"
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.uiState.collect { state ->
+                if (binding.name.text.toString() != state.title) {
+                    binding.name.setText(state.title)
+                    binding.name.setSelection(state.title.length)   // курсор в конец
+                }
+                if (binding.description.text.toString() != state.description) {
+                    binding.description.setText(state.description)
+                    binding.description.setSelection(state.description.length)
+                }
+
+                // картинка
+                if (!state.coverPath.isNullOrEmpty()) {
+                    showPhoto(Uri.fromFile(File(state.coverPath)))
+                } else {
+                    showIcon()
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.uiState.collect { state ->
+                binding.bottom.isEnabled = state.isCreateButtonEnabled
+
+                if (state.isCreateButtonEnabled) {
+                    binding.bottom.setBackgroundColor(requireContext().getColor(R.color.YP_blue))
+                    binding.bottom.setTextColor(requireContext().getColor(R.color.YP_white))
+                } else {
+                    binding.bottom.setBackgroundColor(requireContext().getColor(R.color.YP_Text_Gray))
+                    binding.bottom.setTextColor(requireContext().getColor(R.color.YP_white))
+                }
+            }
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collect { state ->
@@ -166,7 +214,7 @@ class NewPlaylistFragment : Fragment() {
 
     private fun showIcon() {
         Glide.with(this)
-            .load(R.drawable.ic_add_image)
+            .load(R.drawable.cover_cap)
             .apply(
                 RequestOptions()
                     .centerInside()
@@ -223,7 +271,6 @@ class NewPlaylistFragment : Fragment() {
     }
 
     private fun subscribeToUiEvents() {
-
         viewLifecycleOwner.lifecycleScope.launchWhenResumed {
             viewModel.uiEvent.collect { event ->
                 when (event) {

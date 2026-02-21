@@ -10,6 +10,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -18,6 +21,7 @@ import com.example.playlistMaker.R
 import com.example.playlistMaker.common.presentation.constans.UiConstans.TRACK_DATA
 import com.example.playlistMaker.databinding.FragmentPlayerBinding
 import com.example.playlistMaker.mediaLibrary.presentation.state.PlaylistState
+import com.example.playlistMaker.mediaLibrary.presentation.view_model.PlaylistUiState
 import com.example.playlistMaker.mediaLibrary.presentation.view_model.PlaylistsViewModel
 import com.example.playlistMaker.player.presentation.state.TrackViewState
 import com.example.playlistMaker.player.presentation.utils.DisplayPx
@@ -25,6 +29,8 @@ import com.example.playlistMaker.player.presentation.utils.PlaylistPlayerAdapter
 import com.example.playlistMaker.player.presentation.view_model.PlayerViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlayerFragment : Fragment() {
@@ -61,14 +67,27 @@ class PlayerFragment : Fragment() {
         setupClickListeners()
         observerAddStatusTrack()
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collectLatest { state ->
+                    when (state) {
+                        is PlaylistUiState.Success -> requireContext().showToast(state.message)
+                        is PlaylistUiState.Error -> requireContext().showToast(state.message)
+                        is PlaylistUiState.Info -> requireContext().showToast(state.message)
+                        else -> {}
+                    }
+                }
+            }
+        }
+
         adapter.onPlaylistClick = { playlist ->
             val trackId = track?.trackId
             if (trackId != null) {
-                playlistViewModel.selectTrack(trackId)
                 viewModel.addTrackToPlaylist(
                     playlist.id,
                     trackViewState = track!!
                 )
+                Log.d("AddTrack", "Adding track ${trackId} to playlist ${playlist.id}")
                 val bottomSheetBehavior = BottomSheetBehavior.from(binding.standardBottomSheet)
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             }
@@ -107,21 +126,14 @@ class PlayerFragment : Fragment() {
         }
 
         binding.backPlaylist.setNavigationOnClickListener {
-            try {
+
                 if (isAdded) {
                     val navController = findNavController()
                     if (!navController.navigateUp()) {
-                        navController.popBackStack()
+                        navController.popBackStack(R.id.playlistTrackFragment, false)
                     }
-                    val bottomNav =
-                        activity?.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-                    bottomNav?.selectedItemId = R.id.searchFragment
                 }
-            } catch (e: Exception) {
-                Log.e("PlayerFragment", "Error handling back navigation: ${e.message}")
-                parentFragmentManager.popBackStack()
             }
-        }
 
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.standardBottomSheet).apply {
             state = BottomSheetBehavior.STATE_HIDDEN
@@ -179,6 +191,10 @@ class PlayerFragment : Fragment() {
         }
     }
 
+    fun Context.showToast(message: String, duration: Int = Toast.LENGTH_SHORT) {
+        Toast.makeText(this, message, duration).show()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -199,8 +215,7 @@ class PlayerFragment : Fragment() {
         playlistViewModel.playlistObserver.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is PlaylistState.Content -> {
-                    state.playlists.forEach { playlist ->
-                    }
+                    state.playlists.forEach { _ -> }
                     adapter.updatePlayerPlaylists(state.playlists)
                     binding.playlistsRecyclerView.visibility = View.VISIBLE
                 }

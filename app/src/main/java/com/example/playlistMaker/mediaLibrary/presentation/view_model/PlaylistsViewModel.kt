@@ -1,6 +1,5 @@
 package com.example.playlistMaker.mediaLibrary.presentation.view_model
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -26,25 +25,21 @@ class PlaylistsViewModel(
 
     fun loadPlaylist() {
         viewModelScope.launch {
-            try {
-                playlistInteractor.getAllPlaylists().collect { playlists ->
-                    if (playlists.isNotEmpty()) {
-                        val viewStates = playlists.map { playlist ->
-                            PlaylistViewState(
-                                id = playlist.id,
-                                name = playlist.name,
-                                description = playlist.description,
-                                coverPath = playlist.coverPath,
-                                trackCount = playlist.trackCount
-                            )
-                        }
-                        _playlistState.value = PlaylistState.Content(viewStates)
-                    } else {
-                        _playlistState.value = PlaylistState.Empty
+            playlistInteractor.getAllPlaylists().collect { playlists ->
+                if (playlists.isNotEmpty()) {
+                    val viewStates = playlists.map { playlist ->
+                        PlaylistViewState(
+                            id = playlist.id,
+                            name = playlist.name,
+                            description = playlist.description,
+                            coverPath = playlist.coverPath,
+                            trackCount = playlist.trackCount
+                        )
                     }
+                    _playlistState.value = PlaylistState.Content(viewStates)
+                } else {
+                    _playlistState.value = PlaylistState.Empty
                 }
-            } catch (e: Exception) {
-                _playlistState.value = PlaylistState.Empty
             }
         }
     }

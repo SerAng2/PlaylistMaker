@@ -31,7 +31,5 @@ data class PlaylistTrackEntity(
 
     @ColumnInfo(name = "track_id")
     val trackId: Long,
-
-    @ColumnInfo(name = "position")
-    val position: Int
+    @ColumnInfo(name = "added_at") val addedAt: Long = System.currentTimeMillis()
 )

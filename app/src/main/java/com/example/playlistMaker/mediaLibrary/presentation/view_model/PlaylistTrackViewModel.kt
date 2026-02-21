@@ -1,12 +1,13 @@
 package com.example.playlistMaker.mediaLibrary.presentation.view_model
 
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistMaker.common.domain.model.Track
 import com.example.playlistMaker.mediaLibrary.domain.interactor.PlaylistInteractor
 import com.example.playlistMaker.mediaLibrary.domain.model.Playlist
 import com.example.playlistMaker.mediaLibrary.presentation.mapper.TrackToViewStateMapper
+import com.example.playlistMaker.mediaLibrary.presentation.state.FavoritesState
 import com.example.playlistMaker.player.presentation.state.TrackViewState
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,15 +26,12 @@ class PlaylistTrackViewModel(
     val allPlaylists = playlistInteractor.getAllPlaylists()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    // В ViewModel — ОБЯЗАТЕЛЬНО ИНИЦИАЛИЗИРУЙТЕ ПЕРВОНАЧАЛЬНОЕ ЗНАЧЕНИЕ
     private val _currentPlaylistTracks = MutableStateFlow<List<TrackViewState>>(emptyList())
     val currentPlaylistTracks: StateFlow<List<TrackViewState>> = _currentPlaylistTracks.asStateFlow()
 
 
     private val _uiState = MutableStateFlow<PlaylistUiState>(PlaylistUiState.Idle)
     val uiState = _uiState.asStateFlow()
-
-
 
     private val _totalDuration = MutableStateFlow<String>("0 мин")
     val totalDuration = _totalDuration.asStateFlow()
@@ -43,8 +41,9 @@ class PlaylistTrackViewModel(
 
     private val _shareEvent = MutableSharedFlow<ShareEvent>()
     val shareEvent = _shareEvent.asSharedFlow()
-    private val _currentPlaylist = MutableStateFlow<Playlist?>(null)
-    val currentPlaylist: StateFlow<Playlist?> = _currentPlaylist.asStateFlow()
+
+    private val favoritesState = MutableLiveData<FavoritesState>()
+    val favoritesObserver get() = favoritesState
 
     fun deletePlaylist(playlistId: Long) {
         viewModelScope.launch {
@@ -60,28 +59,25 @@ class PlaylistTrackViewModel(
     // Загрузка треков плейлиста
     fun loadPlaylistTracks(playlistId: Long) {
         viewModelScope.launch {
-            _uiState.value = PlaylistUiState.Loading
-            try {
-                val playlist = playlistInteractor.getPlaylistById(playlistId).first()
+            _currentPlaylistTracks.value = emptyList() // Сбрасываем
 
-                // ✅ ТЕПЕРЬ ОБНОВЛЯЕМ ТОТ ПОТОК, НА КОТОРЫЙ ПОДПИСАН FRAGMENT
-                _currentPlaylist.value = playlist  // ← ВАЖНО!
+            playlistInteractor.getPlaylistTracks(playlistId)
+                .collect { tracks ->
+                    val viewStates = TrackToViewStateMapper.map(tracks)
 
-                val tracks = playlistInteractor.getPlaylistTracks(playlistId)
-                val trackViewStates = TrackToViewStateMapper.map(tracks)
+                    Log.d("ViewModel", "Loaded tracks: ${tracks.size}")
 
-                _currentPlaylistTracks.value = trackViewStates
-                _totalDuration.value = calculateTotalDuration(trackViewStates)
+                    _currentPlaylistTracks.value = viewStates
+                    favoritesState.value = if (tracks.isEmpty()) {
+                        FavoritesState.Empty
+                    } else {
+                        FavoritesState.Content(viewStates)
+                    }
 
-                _uiState.value = PlaylistUiState.Success("Треки загружены")
-
-            } catch (e: Exception) {
-                _uiState.value = PlaylistUiState.Error("Ошибка загрузки: ${e.message}")
-            }
+                    _totalDuration.value = calculateTotalDuration(viewStates)
+                }
         }
     }
-
-
 
     private fun calculateTotalDuration(tracks: List<TrackViewState>): String {
         if (tracks.isEmpty()) return "0 мин"
@@ -126,29 +122,17 @@ class PlaylistTrackViewModel(
         }
     }
 
-    private fun buildShareText(): String {
-        val playlist = _currentPlaylist.value ?: return "Плейлист не загружен"
-        val tracks = _currentPlaylistTracks.value ?: return "Нет треков"
-
-        if (tracks.isEmpty()) return "В данном плейлисте нет треков, которыми можно поделиться."
-
+    private fun buildShareText(playlist: Playlist, tracks: List<TrackViewState>): String {
         val builder = StringBuilder()
-
-        // Название плейлиста
         builder.append("${playlist.name}\n")
 
-        // Описание (если есть)
         if (playlist.description?.isNotBlank() == true) {
             builder.append("${playlist.description}\n\n")
         }
 
-        // Количество треков
         builder.append("Количество треков: ${tracks.size}\n\n")
-
-        // Заголовок списка
         builder.append("Список треков:\n")
 
-        // Перебираем треки
         tracks.forEachIndexed { index, track ->
             val artist = track.artistName ?: "Неизвестный исполнитель"
             val name = track.trackName ?: "Неизвестное название"
@@ -159,48 +143,37 @@ class PlaylistTrackViewModel(
         return builder.toString().trimEnd()
     }
 
-    fun sharePlaylist() {
+    fun sharePlaylist(playlistId: Long) {
         viewModelScope.launch {
-            val shareText = buildShareText()
-            Log.d("PlaylistTrackVM", "buildShareText result: ${shareText.take(200)}...")
+            val playlist = playlistInteractor.getAllPlaylists().first().find { it.id == playlistId }
+            val tracks = _currentPlaylistTracks.value ?: emptyList()
 
-            when {
-                shareText == "Плейлист не загружен" ||
-                        shareText == "Нет треков" ||
-                        shareText == "В данном плейлисте нет треков, которыми можно поделиться." -> {
-                    _shareEvent.emit(ShareEvent.EmptyPlaylist)
-                    Log.d("PlaylistTrackVM", "Emitting EmptyPlaylist")
-                }
-                else -> {
-                    _shareEvent.emit(ShareEvent.ShareText(shareText))
-                    Log.d("PlaylistTrackVM", "Emitting ShareText: ${shareText.lines().first()}")
-                }
+            if (tracks.isEmpty() || playlist == null) {
+                _shareEvent.emit(ShareEvent.EmptyPlaylist)
+                return@launch
             }
+
+            val text = buildShareText(playlist, tracks)
+            _shareEvent.emit(ShareEvent.ShareText(text))
         }
     }
 
 
     // Метод для удаления трека из плейлиста
-    fun removeTrackFromPlaylist(track: TrackViewState, playlistId: Long) =
+    fun removeTrackFromPlaylist(playlistId: Long, track: TrackViewState) {
+        Log.d("PLAYLIST_TRACK", "removeTrack(playlist=$playlistId, track=${track.trackId})")
         viewModelScope.launch {
-            // 1. удаляем и СРАЗУ получаем актуальный список
-            val actualTracks = playlistInteractor.removeTrackFromPlaylist(playlistId, track.trackId)
-
-            // 2. кладём его в StateFlow → RecyclerView перерисуется
-            _currentPlaylistTracks.value = TrackToViewStateMapper.map(actualTracks)
-
-            // 3. пересчитываем длительность
-            _totalDuration.value = calculateTotalDuration(_currentPlaylistTracks.value)
+            playlistInteractor.removeTrackFromPlaylist(playlistId, track.trackId)
         }
+    }
 }
-
-
 
 sealed class PlaylistUiState {
     object Idle : PlaylistUiState()
     object Loading : PlaylistUiState()
     data class Success(val message: String) : PlaylistUiState()
     data class Error(val message: String) : PlaylistUiState()
+    data class Info(val message: String) : PlaylistUiState()
 }
 
 sealed class ShareEvent {

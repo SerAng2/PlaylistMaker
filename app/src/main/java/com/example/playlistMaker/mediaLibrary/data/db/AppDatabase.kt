@@ -15,7 +15,7 @@ import com.example.playlistMaker.mediaLibrary.data.db.entity.TrackEntity
         TrackEntity::class,
         PlaylistEntity::class,
         PlaylistTrackEntity::class
-               ], version = 10
+               ], version = 14
 )
 
 abstract class AppDatabase : RoomDatabase() {

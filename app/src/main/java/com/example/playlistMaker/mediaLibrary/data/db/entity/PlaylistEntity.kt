@@ -17,7 +17,7 @@ data class PlaylistEntity(
     val description: String,
 
     @ColumnInfo(name = "cover_path")
-    val coverPath: String? = null,
+    val coverPath: String?,
 
     @ColumnInfo(name = "created_at")
     val createdAt: Long = System.currentTimeMillis(),

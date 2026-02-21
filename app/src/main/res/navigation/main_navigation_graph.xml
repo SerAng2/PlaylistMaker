@@ -15,19 +15,19 @@
             app:destination="@id/playerFragment" />
         <action
             android:id="@+id/action_mediaLibraryFragment_to_newPlaylistFragment"
-            app:destination="@id/newPlaylistFragment" />
+            app:destination="@id/newPlaylistFragment"
+            />
         <action
             android:id="@+id/action_mediaLibraryFragment_to_playlistsFragment"
-            app:destination="@id/playlistsFragment"
-            />
+            app:destination="@id/playlistsFragment" />
         <action
             android:id="@+id/action_mediaLibraryFragment_to_playlistTrackFragment"
             app:destination="@id/playlistTrackFragment"
-            app:popUpTo="@id/mediaLibraryFragment" >
-        <argument
-            android:name="playlistId"
-            app:argType="long"
-            app:nullable="false" />
+            app:popUpTo="@id/mediaLibraryFragment">
+            <argument
+                android:name="playlistId"
+                app:argType="long"
+                app:nullable="false" />
         </action>
     </fragment>
 
@@ -78,11 +78,11 @@
         android:id="@+id/newPlaylistFragment"
         android:name="com.example.playlistMaker.mediaLibrary.presentation.ui.NewPlaylistFragment"
         android:label="fragment_new_playlist2"
-        tools:layout="@layout/fragment_new_playlist" >
-    <argument
-        android:name="playlistId"
-        app:argType="long"
-        android:defaultValue="-1L" />
+        tools:layout="@layout/fragment_new_playlist">
+        <argument
+            android:name="playlistId"
+            android:defaultValue="-1L"
+            app:argType="long" />
     </fragment>
 
     <fragment
@@ -102,6 +102,11 @@
             app:destination="@id/playerFragment" />
         <action
             android:id="@+id/action_playlistTrackFragment_to_newPlaylistFragment"
-            app:destination="@id/newPlaylistFragment" />
+            app:destination="@id/newPlaylistFragment">
+            <argument
+                android:name="playlistId"
+                app:argType="long" />
+        </action>
+
     </fragment>
 </navigation>
