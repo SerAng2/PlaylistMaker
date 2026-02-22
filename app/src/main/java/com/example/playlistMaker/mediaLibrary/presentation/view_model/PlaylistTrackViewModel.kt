@@ -64,9 +64,6 @@ class PlaylistTrackViewModel(
             playlistInteractor.getPlaylistTracks(playlistId)
                 .collect { tracks ->
                     val viewStates = TrackToViewStateMapper.map(tracks)
-
-                    Log.d("ViewModel", "Loaded tracks: ${tracks.size}")
-
                     _currentPlaylistTracks.value = viewStates
                     favoritesState.value = if (tracks.isEmpty()) {
                         FavoritesState.Empty
@@ -161,7 +158,6 @@ class PlaylistTrackViewModel(
 
     // Метод для удаления трека из плейлиста
     fun removeTrackFromPlaylist(playlistId: Long, track: TrackViewState) {
-        Log.d("PLAYLIST_TRACK", "removeTrack(playlist=$playlistId, track=${track.trackId})")
         viewModelScope.launch {
             playlistInteractor.removeTrackFromPlaylist(playlistId, track.trackId)
         }

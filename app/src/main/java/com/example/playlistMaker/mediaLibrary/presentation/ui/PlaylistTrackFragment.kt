@@ -320,24 +320,24 @@ class PlaylistTrackFragment : Fragment() {
 
     private fun showDeleteDialog(track: TrackViewState, playlistId: Long) {
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Удалить трек?")
-            .setPositiveButton("ДА") { _, _ ->
+            .setTitle(R.string.deleteTrack)
+            .setPositiveButton(R.string.yes) { _, _ ->
                 viewModel.removeTrackFromPlaylist(playlistId, track)
-                Toast.makeText(requireContext(), "${track.trackName} удален(а)", Toast.LENGTH_SHORT)
+                Toast.makeText(requireContext(), "${track.trackName} ${R.string.deleted}", Toast.LENGTH_SHORT)
                     .show()
             }
-            .setNegativeButton("НЕТ") { dialog, _ -> dialog.dismiss() }
+            .setNegativeButton(R.string.no) { dialog, _ -> dialog.dismiss() }
             .show()
     }
 
     private fun showDeletePlaylistDialog() {
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Удалить плейлист?")
-            .setMessage("Все треки останутся в медиатеке.")
-            .setPositiveButton("Удалить") { _, _ ->
+            .setTitle(R.string.deleteTrack)
+            .setMessage(R.string.allTracksWillRemainLibrary)
+            .setPositiveButton(R.string.delete) { _, _ ->
                 viewModel.deletePlaylist(currentPlaylistId)
             }
-            .setNegativeButton("Отмена", null)
+            .setNegativeButton(R.string.cancel, null)
             .show()
     }
 

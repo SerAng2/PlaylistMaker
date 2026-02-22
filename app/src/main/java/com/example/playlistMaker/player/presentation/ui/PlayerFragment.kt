@@ -87,7 +87,6 @@ class PlayerFragment : Fragment() {
                     playlist.id,
                     trackViewState = track!!
                 )
-                Log.d("AddTrack", "Adding track ${trackId} to playlist ${playlist.id}")
                 val bottomSheetBehavior = BottomSheetBehavior.from(binding.standardBottomSheet)
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             }
@@ -127,13 +126,13 @@ class PlayerFragment : Fragment() {
 
         binding.backPlaylist.setNavigationOnClickListener {
 
-                if (isAdded) {
-                    val navController = findNavController()
-                    if (!navController.navigateUp()) {
-                        navController.popBackStack(R.id.playlistTrackFragment, false)
-                    }
+            if (isAdded) {
+                val navController = findNavController()
+                if (!navController.navigateUp()) {
+                    navController.popBackStack(R.id.playlistTrackFragment, false)
                 }
             }
+        }
 
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.standardBottomSheet).apply {
             state = BottomSheetBehavior.STATE_HIDDEN
@@ -143,18 +142,20 @@ class PlayerFragment : Fragment() {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
-        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> {
                         binding.overlay.visibility = View.GONE
                     }
+
                     else -> {
-                            binding.overlay.visibility = View.VISIBLE
-                            setupTrackInfoObserver()
-                        }
+                        binding.overlay.visibility = View.VISIBLE
+                        setupTrackInfoObserver()
                     }
                 }
+            }
 
             override fun onSlide(p0: View, p1: Float) {}
         })
@@ -228,10 +229,12 @@ class PlayerFragment : Fragment() {
     }
 
     private fun observerAddStatusTrack() {
-        viewModel.addTrackStatus.observe(viewLifecycleOwner) {
-            status ->
+        viewModel.addTrackStatus.observe(viewLifecycleOwner) { status ->
             if (status.isNotEmpty()) {
                 Toast.makeText(requireContext(), status, Toast.LENGTH_SHORT).show()
+                if (status == getString(R.string.trackAdded)) {
+                    playlistViewModel.loadPlaylist()
+                }
             }
         }
     }

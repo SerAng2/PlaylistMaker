@@ -1,6 +1,5 @@
 package com.example.playlistMaker.mediaLibrary.data.repositoryImpl
 
-import android.util.Log
 import com.example.playlistMaker.common.domain.model.Track
 import com.example.playlistMaker.mediaLibrary.data.db.AppDatabase
 import com.example.playlistMaker.mediaLibrary.data.db.entity.PlaylistEntity
@@ -49,7 +48,6 @@ class PlaylistRepositoryImpl(
     override suspend fun addTrackToPlaylist(playlistId: Long, track: Track) {
         val trackEntity = convertor.mapToData(track)
         appDatabase.tracksDao().insertTrack(trackEntity) // Сохраняем трек (если ещё не существует)
-
         // ✅ КЛЮЧЕВОЙ ШАГ: Создаём связь между плейлистом и треком
         val playlistTrackEntity = PlaylistTrackEntity(
             playlistId = playlistId,
@@ -57,7 +55,6 @@ class PlaylistRepositoryImpl(
         )
         appDatabase.playlistTrackDao().insertPlaylistTrack(playlistTrackEntity) // ✅ СВЯЗЬ СОЗДАНА!
     }
-
 
     // Получение треков плейлиста
     override fun getPlaylistTracks(playlistId: Long): Flow<List<Track>> {
@@ -88,7 +85,6 @@ class PlaylistRepositoryImpl(
 
     override suspend fun deletePlaylist(playlistId: Long) {
         appDatabase.playlistDao().deletePlaylist(playlistId)
-        Log.d("Delete", playlistId.toString())
     }
 
     // Получение плейлиста по ID

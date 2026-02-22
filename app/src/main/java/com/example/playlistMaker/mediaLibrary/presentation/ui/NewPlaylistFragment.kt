@@ -70,20 +70,36 @@ class NewPlaylistFragment : Fragment() {
         setupBackCallback()
 
         val playlistId = args.playlistId
-        Log.d("NewPlaylist", "playlistId = $playlistId")
 
         if (playlistId != -1L) {
+            // Режим редактирования
             viewModel.loadPlaylistForEdit(playlistId)
-            binding.bottom.text = "Сохранить"
+            binding.bottom.text = getString(R.string.save) // Устанавливаем текст кнопки
+
+            // !!! Вот правильный способ установить обработчик клика !!!
+            binding.bottom.setOnClickListener {
+                viewModel.savePlaylistChanges()
+                // После сохранения, возможно, нужно вернуться назад или обновить UI
+                 findNavController().popBackStack()
+            }
         } else {
-            binding.bottom.text = "Создать"
+            // Режим создания нового плейлиста
+            binding.bottom.text = getString(R.string.create) // Устанавливаем текст кнопки
+
+            // !!! Также устанавливаем обработчик клика для создания !!!
+            // Если метод savePlaylistChanges() универсален, можно использовать его.
+            // Или создать отдельный метод createPlaylistChanges() в ViewModel.
+            binding.bottom.setOnClickListener {
+                viewModel.onCreatePlaylist() // Или viewModel.createPlaylist()
+                // Например: findNavController().popBackStack()
+            }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collect { state ->
                 if (binding.name.text.toString() != state.title) {
                     binding.name.setText(state.title)
-                    binding.name.setSelection(state.title.length)   // курсор в конец
+                    binding.name.setSelection(state.title.length)
                 }
                 if (binding.description.text.toString() != state.description) {
                     binding.description.setText(state.description)
@@ -307,13 +323,13 @@ class NewPlaylistFragment : Fragment() {
         isExitDialogShowing = true
 
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Завершить создание плейлиста?")
-            .setMessage("Все несохраненные данные будут потеряны")
-            .setNeutralButton("Отмена") { dialog, _ ->
+            .setTitle(R.string.finishCreatingPlaylist)
+            .setMessage(R.string.allUnsavedDataWillBeLost)
+            .setNeutralButton(R.string.cancel) { dialog, _ ->
                 dialog.dismiss()
                 isExitDialogShowing = false
             }
-            .setPositiveButton("Завершить") { dialog, _ ->
+            .setPositiveButton(R.string.complete) { dialog, _ ->
                 dialog.dismiss()
                 isExitDialogShowing = false
                 viewModel.onBackClicked()

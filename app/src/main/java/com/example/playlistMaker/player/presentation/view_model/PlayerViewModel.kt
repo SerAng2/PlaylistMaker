@@ -2,11 +2,11 @@ package com.example.playlistMaker.player.presentation.view_model
 
 import android.annotation.SuppressLint
 import android.media.MediaPlayer
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistMaker.R
 import com.example.playlistMaker.common.domain.model.Track
 import com.example.playlistMaker.mediaLibrary.domain.interactor.FavoriteTrackInteractor
 import com.example.playlistMaker.mediaLibrary.domain.interactor.PlaylistInteractor
@@ -20,7 +20,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -139,22 +138,10 @@ class PlayerViewModel(
         }
     }
 
-    private fun loadPlaylists() {
-        viewModelScope.launch {
-            try {
-                val list = playlistInteractor.getAllPlaylists().first()
-                _playlists.value = list
-            } catch (e: Exception) {
-                Log.e("PlayerViewModel", "Error loading playlists", e)
-            }
-        }
-    }
-
     // Добавление трека в плейлист
     fun addTrackToPlaylist(playlistId: Long, trackViewState: TrackViewState) {
         val trackId = trackViewState.trackId
         viewModelScope.launch {
-
                 val exists = playlistInteractor.isTrackInPlaylist(playlistId, trackId)
                 if (exists) {
                     _addTrackStatus.value = "Трек уже в плейлисте"
@@ -162,7 +149,6 @@ class PlayerViewModel(
                     val track = trackViewState.toDomainTrack()
                     playlistInteractor.addTrackToPlaylist(playlistId, track)
                     _addTrackStatus.value = "Трек добавлен в плейлист"
-                    Log.d("PlayerViewModel", "✅ Track added: $trackId → playlist $playlistId")
                 }
             }
         }

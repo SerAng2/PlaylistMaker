@@ -89,9 +89,7 @@ class NewPlaylistViewModel(
 
     fun loadPlaylistForEdit(playlistId: Long) {
         viewModelScope.launch {
-            Log.d("NewPlaylistVM", "Loading playlist for edit: $playlistId")
             playlistInteractor.getPlaylistById(playlistId).collect { playlist ->
-                Log.d("NewPlaylistVM", "Loaded: ${playlist?.name}")
                 if (playlist != null) {
                     _uiState.value = NewPlaylistUiState(
                         title = playlist.name,
@@ -102,6 +100,33 @@ class NewPlaylistViewModel(
                     )
                 }
             }
+        }
+    }
+
+
+    fun savePlaylistChanges() {
+        // Убедитесь, что isEditing установлен в true при загрузке для редактирования
+        if (_uiState.value.isEditing && _uiState.value.playlistId != null) {
+            viewModelScope.launch {
+                val currentUiState = _uiState.value
+                // Проверка, что у нас есть все для обновления
+                if (currentUiState.playlistId != null) {
+                    // Здесь вызываем updatePlaylist с актуальными данными
+                    playlistInteractor.updatePlaylist(
+                        id = currentUiState.playlistId,
+                        name = currentUiState.title,
+                        description = currentUiState.description,
+                        coverPath = currentUiState.coverPath
+                    )
+                    // После сохранения, можно сбросить состояние или перейти обратно
+                    // _uiState.value = NewPlaylistUiState() // Пример сброса
+                    // navigationActions.navigateBack()
+                }
+            }
+        } else {
+            // Обработка случая, когда это новый плейлист, а не редактирование
+            // Или когда playlistId отсутствует
+            Log.w("NewPlaylistVM", "Cannot save: not in editing mode or playlist ID is missing.")
         }
     }
 }
