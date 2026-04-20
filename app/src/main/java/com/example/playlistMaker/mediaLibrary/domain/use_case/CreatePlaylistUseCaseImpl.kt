@@ -9,11 +9,19 @@ class CreatePlaylistUseCaseImpl(
         title: String,
         description: String,
         coverPath: String?
-    ): Result<Unit> {
+    ): Result<Long> {
+
+        if (title.trim().isEmpty()) {
+            return Result.failure(IllegalArgumentException("Название плейлиста не может быть пустым"))
+        }
 
         return try {
-            playlistRepository.createPlaylist(title, description, coverPath)
-            Result.success(Unit)
+            val playlistId = playlistRepository.createPlaylist(
+                name = title.trim(),
+                description = description.trim(),
+                coverPath = coverPath
+            )
+            Result.success(playlistId)
         } catch (e: Exception) {
             Result.failure(e)
         }

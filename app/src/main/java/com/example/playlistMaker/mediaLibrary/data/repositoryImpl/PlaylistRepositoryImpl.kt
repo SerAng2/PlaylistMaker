@@ -1,94 +1,126 @@
 package com.example.playlistMaker.mediaLibrary.data.repositoryImpl
 
-import com.example.playlistMaker.mediaLibrary.data.db.dao.PlaylistDao
+import com.example.playlistMaker.common.domain.model.Track
+import com.example.playlistMaker.mediaLibrary.data.db.AppDatabase
 import com.example.playlistMaker.mediaLibrary.data.db.entity.PlaylistEntity
+import com.example.playlistMaker.mediaLibrary.data.db.entity.PlaylistTrackEntity
+import com.example.playlistMaker.mediaLibrary.data.mapper.TrackDbConvertor
 import com.example.playlistMaker.mediaLibrary.domain.model.Playlist
-import com.example.playlistMaker.mediaLibrary.domain.repository.FileManagerRepository
 import com.example.playlistMaker.mediaLibrary.domain.repository.PlaylistRepository
-import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 
 class PlaylistRepositoryImpl(
-    private val playlistDao: PlaylistDao,
-    private val gson: Gson,
-    private val fileManagerRepository: FileManagerRepository
+    private val appDatabase: AppDatabase,
+    private val convertor: TrackDbConvertor
 ) : PlaylistRepository {
 
-    private val _refreshTrigger = MutableStateFlow(0)
-
-    override suspend fun refreshPlaylists() {
-        _refreshTrigger.value = _refreshTrigger.value + 1
-    }
-
+    // Создание плейлиста
     override suspend fun createPlaylist(
-        title: String,
+        name: String,
         description: String,
         coverPath: String?
     ): Long {
-
-        val internalCoverPath = coverPath?.let { path ->
-            fileManagerRepository.copyImageToInternalStorage(path, "playlist_covers")
-        }
-
-        val entity = PlaylistEntity(
-            name = title,
+        val playlistEntity = PlaylistEntity(
+            name = name,
             description = description,
-            coverPath = internalCoverPath,
-            trackIdsJson = gson.toJson(emptyList<Long>()),
-            trackCount = 0
+            coverPath = coverPath
         )
-
-        val result = playlistDao.insertPlaylist(entity)
-
-        refreshPlaylists()
-
-        return result
+        return appDatabase.playlistDao().insertPlaylist(playlistEntity)
     }
 
+    // Получение всех плейлистов
     override fun getAllPlaylists(): Flow<List<Playlist>> {
-        return _refreshTrigger.flatMapLatest {
-            playlistDao.getAllPlaylists().map { entities ->
-                entities.map { it.toDomain(gson) }
+        return appDatabase.playlistDao().getAllPlaylists().map { entities ->
+            entities.map { entity ->
+                Playlist(
+                    id = entity.id,
+                    name = entity.name,
+                    description = entity.description,
+                    coverPath = entity.coverPath,
+                    trackCount = getPlaylistTrackCount(entity.id)
+                )
             }
         }
     }
 
-    override suspend fun addTrackToPlaylist(playlistId: Long, trackId: Long) {
+    // Добавление трека в плейлист
+    override suspend fun addTrackToPlaylist(playlistId: Long, track: Track) {
+        val trackEntity = convertor.mapToData(track)
+        appDatabase.tracksDao().insertTrack(trackEntity) // Сохраняем трек (если ещё не существует)
+        // ✅ КЛЮЧЕВОЙ ШАГ: Создаём связь между плейлистом и треком
+        val playlistTrackEntity = PlaylistTrackEntity(
+            playlistId = playlistId,
+            trackId = trackEntity.trackId // 👈 ИСПОЛЬЗУЕМ id из сохранённого трека
+        )
+        appDatabase.playlistTrackDao().insertPlaylistTrack(playlistTrackEntity) // ✅ СВЯЗЬ СОЗДАНА!
+    }
 
-        val playlistEntity = playlistDao.getPlaylistById(playlistId) ?: return
-
-        val currentTrackIds =
-            gson.fromJson(playlistEntity.trackIdsJson, Array<Long>::class.java).toMutableList()
-        if (!currentTrackIds.contains(trackId)) {
-            currentTrackIds.add(trackId)
-
-            val updatedEntity = playlistEntity.copy(
-                trackIdsJson = gson.toJson(currentTrackIds),
-                trackCount = currentTrackIds.size
-            )
-            playlistDao.updatePlaylist(updatedEntity)
-            refreshPlaylists()
-        } else {
+    // Получение треков плейлиста
+    override fun getPlaylistTracks(playlistId: Long): Flow<List<Track>> {
+        return appDatabase.playlistTrackDao().getPlaylistTracks(playlistId).map { playlistTracks ->
+            val trackIds = playlistTracks.map { it.trackId }
+            val trackEntities = appDatabase.tracksDao().getTracksByIds(trackIds)
+            playlistTracks.mapNotNull { pte ->
+                trackEntities.find { it.trackId == pte.trackId }?.let { convertor.mapToDomain(it) }
+            }
         }
     }
 
-    override suspend fun isTrackInPlaylist(playlistId: Long, trackId: Long?): Boolean {
-        val playlistEntity = playlistDao.getPlaylistById(playlistId) ?: return false
-        val trackIds = gson.fromJson(playlistEntity.trackIdsJson, Array<Long>::class.java)
-        return trackIds.contains(trackId)
+    // Проверка, есть ли трек в плейлисте
+    override suspend fun isTrackInPlaylist(playlistId: Long, trackId: Long): Boolean {
+        return appDatabase.playlistTrackDao().isTrackInPlaylist(playlistId, trackId)
     }
+
+    // Получение количества треков в плейлисте
+    private suspend fun getPlaylistTrackCount(playlistId: Long): Int {
+        return appDatabase.playlistTrackDao().getTrackCount(playlistId)
+    }
+
+    // Удаление трека из плейлиста
+    override suspend fun removeTrackFromPlaylist(playlistId: Long, trackId: Long) {
+        appDatabase.playlistTrackDao().removeTrackFromPlaylist(playlistId, trackId)
+        appDatabase.playlistDao().decrementTrackCount(playlistId)
+    }
+
+    override suspend fun deletePlaylist(playlistId: Long) {
+        appDatabase.playlistDao().deletePlaylist(playlistId)
+    }
+
+    // Получение плейлиста по ID
+    override fun getPlaylistById(playlistId: Long): Flow<Playlist?> {
+        return appDatabase.playlistDao().getPlaylistById(playlistId).map { entity ->
+            entity?.let {
+                Playlist(
+                    id = it.id,
+                    name = it.name,
+                    description = it.description,
+                    coverPath = it.coverPath,
+                    trackCount = getPlaylistTrackCount(it.id)
+                )
+            }
+        }
+    }
+
+    override suspend fun getPlaylistByIdOnce(id: Long): Playlist {
+        val entity = appDatabase.playlistDao().getByIdOnce(id)
+        val count = appDatabase.playlistTrackDao().getTrackCount(id)
+        return Playlist(
+            id = entity?.id ?: 0,
+            name = entity?.name ?: "",
+            description = entity?.description ?: "",
+            coverPath = entity?.coverPath,
+            trackCount = count
+        )
+    }
+
+    override suspend fun updatePlaylist(
+        id: Long,
+        name: String,
+        description: String?,
+        coverPath: String?
+    ) = appDatabase.playlistDao().updatePlaylist(id, name, description ?: "", coverPath)
+
 }
 
-private fun PlaylistEntity.toDomain(gson: Gson): Playlist {
-    return Playlist(
-        id = this.id,
-        name = this.name,
-        description = this.description,
-        coverPath = this.coverPath,
-        trackIds = gson.fromJson(this.trackIdsJson, Array<Long>::class.java).toList(),
-        trackCount = this.trackCount
-    )
-}
+

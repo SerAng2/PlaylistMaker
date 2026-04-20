@@ -3,6 +3,7 @@ package com.example.playlistMaker.mediaLibrary.di
 import com.example.playlistMaker.mediaLibrary.presentation.view_model.FavoriteTracksViewModel
 import com.example.playlistMaker.mediaLibrary.presentation.view_model.MediaLibraryViewModel
 import com.example.playlistMaker.mediaLibrary.presentation.view_model.NewPlaylistViewModel
+import com.example.playlistMaker.mediaLibrary.presentation.view_model.PlaylistTrackViewModel
 import com.example.playlistMaker.mediaLibrary.presentation.view_model.PlaylistsViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -10,6 +11,7 @@ import org.koin.dsl.module
 val mediaLibraryViewModelModule = module {
     viewModel { MediaLibraryViewModel() }
     viewModel { FavoriteTracksViewModel(get()) }
-    viewModel { NewPlaylistViewModel(get()) }
+    viewModel { NewPlaylistViewModel(get(), get()) }
     viewModel { PlaylistsViewModel(get()) }
+    viewModel { PlaylistTrackViewModel(get()) }
 }

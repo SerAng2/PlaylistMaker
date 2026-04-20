@@ -3,6 +3,9 @@ plugins {
     alias(libs.plugins.kotlin.android)
     id("kotlin-parcelize")
     id ("kotlin-kapt")
+
+        id ("androidx.navigation.safeargs.kotlin")
+
 }
 
 android {
@@ -58,6 +61,7 @@ dependencies {
     implementation(libs.androidx.legacy.support.v4)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.glance.appwidget)
+    implementation(libs.androidx.media3.extractor)
     kapt(libs.compiler.v505)
     implementation (libs.retrofit)
     implementation (libs.converter.gson)

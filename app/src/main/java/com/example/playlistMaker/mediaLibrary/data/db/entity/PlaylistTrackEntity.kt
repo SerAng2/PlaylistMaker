@@ -1,19 +1,35 @@
 package com.example.playlistMaker.mediaLibrary.data.db.entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.PrimaryKey
-@Entity(tableName = "playlist_track_table")
+import androidx.room.ForeignKey
+
+// PlaylistTrackEntity.kt - таблица связей
+@Entity(
+    tableName = "playlist_track_table",
+    primaryKeys = ["playlist_id", "track_id"],
+    foreignKeys = [
+        ForeignKey(
+            entity = PlaylistEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["playlist_id"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = TrackEntity::class,
+            parentColumns = ["trackId"],
+            childColumns = ["track_id"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE
+        )
+    ]
+)
 data class PlaylistTrackEntity(
-    @PrimaryKey
+    @ColumnInfo(name = "playlist_id")
+    val playlistId: Long,
+
+    @ColumnInfo(name = "track_id")
     val trackId: Long,
-    val artworkUrl100: String,
-    val trackName: String,
-    val artistName: String,
-    val collectionName: String?,
-    val releaseDate: String?,
-    val primaryGenreName: String?,
-    val country: String?,
-    val trackTime: String,
-    val previewUrl: String,
-    val isFavorite: Boolean = false
+    @ColumnInfo(name = "added_at") val addedAt: Long = System.currentTimeMillis()
 )

@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.playlistMaker.R
-import com.example.playlistMaker.common.presentation.PlaylistAdapter
+import com.example.playlistMaker.mediaLibrary.presentation.utils.PlaylistAdapter
 import com.example.playlistMaker.databinding.FragmentPlaylistBinding
 import com.example.playlistMaker.mediaLibrary.presentation.state.PlaylistState
 import com.example.playlistMaker.mediaLibrary.presentation.view_model.PlaylistsViewModel
@@ -42,9 +42,16 @@ class PlaylistsFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        adapter = PlaylistAdapter(emptyList()) { playlist ->
-            // Обработка клика по плейлисту
-        }
+        adapter = PlaylistAdapter(
+            playlists = emptyList(), // ← Пустой список на старте
+            onPlaylistClick = { playlist ->
+                findNavController().navigate(
+                    MediaLibraryFragmentDirections.actionMediaLibraryFragmentToPlaylistTrackFragment(
+                        playlist.id // ✅ Теперь это реальный ID из PlaylistViewState!
+                    )
+                )
+            }
+        )
         binding.playlistsRecyclerView.adapter = adapter
 
         val layoutManager = GridLayoutManager(requireContext(), 2)

@@ -1,6 +1,5 @@
-package com.example.playlistMaker.common.presentation
+package com.example.playlistMaker.mediaLibrary.presentation.utils
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -13,7 +12,7 @@ import com.example.playlistMaker.player.presentation.utils.DisplayPx
 
 class PlaylistAdapter(
     private var playlists: List<PlaylistViewState>,
-    var onPlaylistClick: (playlist: PlaylistViewState) -> Unit
+    var onPlaylistClick: (playlist: PlaylistViewState) -> Unit,
 ) : RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder>() {
 
     fun updatePlaylists(newPlaylists: List<PlaylistViewState>) {
@@ -47,10 +46,6 @@ class PlaylistAdapter(
                 // Загружаем обложку плейлиста
                 loadPlaylistCover(playlist)
             }
-        }
-
-        private fun formatTrackCount(trackCount: Int, context: Context): String {
-            return context.getString(R.string.tracks, trackCount)
         }
 
         private fun loadPlaylistCover(playlist: PlaylistViewState) {

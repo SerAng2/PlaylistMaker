@@ -1,6 +1,5 @@
 package com.example.playlistMaker.mediaLibrary.presentation.view_model
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,33 +23,23 @@ class PlaylistsViewModel(
         _selectedTrackId.value = trackId
     }
 
-
     fun loadPlaylist() {
         viewModelScope.launch {
-            try {
-                playlistInteractor.getAllPlaylists().collect { playlists ->
-                    playlists.forEach { playlist ->
-
+            playlistInteractor.getAllPlaylists().collect { playlists ->
+                if (playlists.isNotEmpty()) {
+                    val viewStates = playlists.map { playlist ->
+                        PlaylistViewState(
+                            id = playlist.id,
+                            name = playlist.name,
+                            description = playlist.description,
+                            coverPath = playlist.coverPath,
+                            trackCount = playlist.trackCount
+                        )
                     }
-
-                    if (playlists.isNotEmpty()) {
-                        val viewStates = playlists.map { playlist ->
-                            PlaylistViewState(
-                                id = playlist.id,
-                                name = playlist.name,
-                                description = playlist.description,
-                                coverPath = playlist.coverPath,
-                                trackCount = playlist.trackCount,
-                                trackIds = playlist.trackIds
-                            )
-                        }
-                        _playlistState.value = PlaylistState.Content(viewStates)
-                    } else {
-                        _playlistState.value = PlaylistState.Empty
-                    }
+                    _playlistState.value = PlaylistState.Content(viewStates)
+                } else {
+                    _playlistState.value = PlaylistState.Empty
                 }
-            } catch (e: Exception) {
-                _playlistState.value = PlaylistState.Empty
             }
         }
     }

@@ -30,7 +30,11 @@ class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModel()
 
     // ДОБАВЛЕНО: Инициализируем View Binding
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -46,20 +50,28 @@ class SearchFragment : Fragment() {
 
         showLoading()
 
-        adapter = TrackAdapter(emptyList()) { track ->
-            // Добавление трека в историю поиска
-            viewModel.add(track)
+        adapter = TrackAdapter(
+            emptyList(),
+            onTrackClick = { track ->
+                // Добавление трека в историю поиска
+                viewModel.add(track)
 
-            // Проверка на debounce
-            if (viewModel.clickDebounce()) {
-                // Создание Bundle для передачи данных в фрагмент
+                // Проверка на debounce
+                if (viewModel.clickDebounce()) {
+                    // Создание Bundle для передачи данных в фрагмент
 
-                val bundle = Bundle().apply {
-                    putParcelable(TRACK_DATA, track) // Используй putSerializable, если Track не реализует Parcelable
+                    val bundle = Bundle().apply {
+                        putParcelable(
+                            TRACK_DATA,
+                            track
+                        ) // Используй putSerializable, если Track не реализует Parcelable
+                    }
+                    findNavController().navigate(R.id.actionSearchToPlayer, bundle)
                 }
-                findNavController().navigate(R.id.actionSearchToPlayer, bundle)
-            }
-        }
+            },
+            onTrackLongClick = null
+        )
+
 
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter

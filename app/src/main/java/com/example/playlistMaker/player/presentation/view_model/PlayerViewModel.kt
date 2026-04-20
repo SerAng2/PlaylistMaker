@@ -2,22 +2,24 @@ package com.example.playlistMaker.player.presentation.view_model
 
 import android.annotation.SuppressLint
 import android.media.MediaPlayer
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistMaker.R
 import com.example.playlistMaker.common.domain.model.Track
 import com.example.playlistMaker.mediaLibrary.domain.interactor.FavoriteTrackInteractor
 import com.example.playlistMaker.mediaLibrary.domain.interactor.PlaylistInteractor
 import com.example.playlistMaker.mediaLibrary.domain.model.Playlist
+import com.example.playlistMaker.mediaLibrary.presentation.view_model.PlaylistUiState
 import com.example.playlistMaker.player.presentation.mapper.toDomainTrack
 import com.example.playlistMaker.player.presentation.state.PlayerState
 import com.example.playlistMaker.player.presentation.state.TrackViewState
 import com.example.playlistMaker.player.presentation.utils.formatToMMSS
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -43,7 +45,10 @@ class PlayerViewModel(
     private val _playlists = MutableLiveData<List<Playlist>>()
     val playlists: LiveData<List<Playlist>> = _playlists
 
-    private var track: Track? = null
+    private val _uiState = MutableStateFlow<PlaylistUiState>(PlaylistUiState.Idle)
+    val uiState = _uiState.asStateFlow()
+
+    private var tracks: Track? = null
     private var timerJob: Job? = null
     private val dateFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
 
@@ -65,7 +70,7 @@ class PlayerViewModel(
 
     @SuppressLint("SuspiciousIndentation")
     private fun preparePlayer() {
-        val previewUrl = track?.previewUrl
+        val previewUrl = tracks?.previewUrl
         mediaPlayer.setDataSource(previewUrl)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
@@ -108,7 +113,7 @@ class PlayerViewModel(
 
     fun loadTrackInfo(track: TrackViewState?) {
         track?.let {
-            this.track = track?.toTrack()
+            this.tracks = track?.toTrack()
             trackStateLiveData.value = track
             viewModelScope.launch {
                 val isFav = favoriteTrackInteractor.isTrackFavorite(track.trackId)
@@ -133,37 +138,20 @@ class PlayerViewModel(
         }
     }
 
-    private fun loadPlaylists() {
+    // Добавление трека в плейлист
+    fun addTrackToPlaylist(playlistId: Long, trackViewState: TrackViewState) {
+        val trackId = trackViewState.trackId
         viewModelScope.launch {
-            try {
-                val list = playlistInteractor.getAllPlaylists().first()
-                _playlists.value = list
-            } catch (e: Exception) {
-                Log.e("PlayerViewModel", "Error loading playlists", e)
-            }
-        }
-    }
-
-    fun addTrackToPlaylist(playlistId: Long, trackId: Long?) {
-        viewModelScope.launch {
-            try {
                 val exists = playlistInteractor.isTrackInPlaylist(playlistId, trackId)
                 if (exists) {
                     _addTrackStatus.value = "Трек уже в плейлисте"
                 } else {
-                    // ✅ ВАЖНО: Добавляем трек
-                    playlistInteractor.addTrackToPlaylist(playlistId, trackId)
-
+                    val track = trackViewState.toDomainTrack()
+                    playlistInteractor.addTrackToPlaylist(playlistId, track)
                     _addTrackStatus.value = "Трек добавлен в плейлист"
-                    Log.e("PlaylistInteractor", "Saving track: ${track?.trackId}, playlist: ${playlistId}")
-                    loadPlaylists()
-                    playlistInteractor.refreshPlaylists()
-                 }
-            } catch (e: Exception) {
-                _addTrackStatus.value = "Ошибка: трек не найден"
+                }
             }
         }
-    }
 
     fun TrackViewState.toTrack(): Track {
         return Track(

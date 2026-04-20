@@ -5,5 +5,5 @@ interface CreatePlaylistUseCase {
         title: String,
         description: String,
         coverPath: String?
-    ): Result<Unit>
+    ): Result<Long>
 }

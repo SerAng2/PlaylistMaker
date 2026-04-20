@@ -10,6 +10,7 @@ import com.example.playlistMaker.mediaLibrary.domain.interactorImpl.PlaylistInte
 import com.example.playlistMaker.mediaLibrary.domain.repository.FavoriteTracksRepository
 import com.example.playlistMaker.mediaLibrary.domain.repository.FileManagerRepository
 import com.example.playlistMaker.mediaLibrary.domain.repository.PlaylistRepository
+import com.example.playlistMaker.mediaLibrary.domain.use_case.CreatePlaylistUseCase
 import com.example.playlistMaker.mediaLibrary.domain.use_case.CreatePlaylistUseCaseImpl
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -20,9 +21,16 @@ val mediaLibraryDomainModule = module {
         FavoriteTracksRepositoryImpl(get(), get())
     }
     single<FavoriteTrackInteractor> { FavoriteTrackInteractorImpl(get()) }
-    single<PlaylistInteractor> {PlaylistInteractorImpl(get())
+    single<PlaylistInteractor> {
+        PlaylistInteractorImpl(get())
     }
-    single<PlaylistRepository> { PlaylistRepositoryImpl(get(), get(), get()) }
+    single<PlaylistRepository> {
+        PlaylistRepositoryImpl(
+            get(),
+            get()
+        )
+    }
     single { CreatePlaylistUseCaseImpl(get<PlaylistRepository>()) }
     single<FileManagerRepository> { FileManagerRepositoryImpl(androidContext()) }
+    factory<CreatePlaylistUseCase> { CreatePlaylistUseCaseImpl(get()) }
 }

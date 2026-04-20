@@ -4,6 +4,8 @@ data class NewPlaylistUiState(
     val title: String = "",
     val description: String = "",
     val coverPath: String? = null,
+    val isEditing: Boolean = false,
+    val playlistId: Long? = null,
     val isLoading: Boolean = false,
     val error: String? = null
 ) {
@@ -11,5 +13,6 @@ data class NewPlaylistUiState(
         get() = title.isNotBlank()
 
     val hasChanges: Boolean
-        get() = title.isNotBlank() || description.isNotBlank() || coverPath != null
+        get() = !isEditing && (title.isNotBlank() || description.isNotBlank() || coverPath != null)
 }
+

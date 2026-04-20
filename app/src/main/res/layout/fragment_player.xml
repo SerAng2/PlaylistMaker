@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/white_black"
@@ -12,13 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
-
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/leftBorder24dp"
@@ -290,7 +286,7 @@
             android:id="@+id/playlistsRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/layout_24dp"
-            />
+            android:layout_marginTop="@dimen/layout_24dp" />
+
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
